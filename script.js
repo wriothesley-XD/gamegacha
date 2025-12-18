@@ -177,6 +177,186 @@ const characters = [{
         details: "Tenang, tegas, berwibawa, selalu menegakkan keadilan.",
         words: "Kehormatan adalah segalanya.",
         sound: "sounds/neuvillette.mp3"
+    },
+    {
+        name: "Shorekeeper",
+        gender: "female",
+        img: "images/shorekeeper.png",
+        desc: "Pemimpin bijak dan kuat.",
+        details: "Bijaksana, kuat, melindungi dunia, selalu memikirkan masa depan.",
+        words: "Aku akan menjaga pantai ini.",
+        sound: "sounds/shorekeeper.mp3"
+    },
+    {
+        name: "Jane Doe",
+        gender: "female",
+        img: "images/jane_doe.png",
+        desc: "Misterius dan cerdas.",
+        details: "Rahasia, cerdas, selalu mencari kebenaran, penuh misteri.",
+        words: "Siapa aku sebenarnya?",
+        sound: "sounds/jane_doe.mp3"
+    },
+    {
+        name: "Kiana",
+        gender: "female",
+        img: "images/kiana.png",
+        desc: "Pemberani dan energik.",
+        details: "Berani, energik, melawan musuh, selalu melindungi teman.",
+        words: "Aku tidak akan menyerah!",
+        sound: "sounds/kiana.mp3"
+    },
+    {
+        name: "Dyroth Starlight",
+        gender: "male",
+        img: "images/dyroth_starlight.png",
+        desc: "Pahlawan bintang yang strategis.",
+        details: "Strategis, kuat, memimpin pasukan, penuh keberanian.",
+        words: "Bintang akan memandu kita.",
+        sound: "sounds/dyroth_starlight.mp3"
+    },
+    {
+        name: "Ye Shunguang",
+        gender: "female",
+        img: "images/ye_shunguang.png",
+        desc: "Cerah dan penuh harapan.",
+        details: "Optimis, ceria, membawa cahaya, selalu mendukung.",
+        words: "Mari kita lihat cahaya itu.",
+        sound: "sounds/ye_shunguang.mp3"
+    },
+    {
+        name: "Astra Yao",
+        gender: "female",
+        img: "images/astra_yao.png",
+        desc: "Bijak dan visioner.",
+        details: "Visioner, bijaksana, melihat masa depan, penuh wawasan.",
+        words: "Masa depan ada di tangan kita.",
+        sound: "sounds/astra_yao.mp3"
+    },
+    {
+        name: "Ciaccona",
+        gender: "female",
+        img: "images/ciaccona.png",
+        desc: "Elegan dan kuat.",
+        details: "Elegan, kuat, penuh gaya, selalu menari dalam pertarungan.",
+        words: "Mari kita berdansa.",
+        sound: "sounds/ciaccona.mp3"
+    },
+    {
+        name: "Brant",
+        gender: "male",
+        img: "images/brant.png",
+        desc: "Tangguh dan setia.",
+        details: "Tangguh, setia, melindungi, selalu berdiri teguh.",
+        words: "Aku akan melindungimu.",
+        sound: "sounds/brant.mp3"
+    },
+    {
+        name: "Raiden Shogun",
+        gender: "female",
+        img: "images/raiden_shogun.png",
+        desc: "Megah dan adil.",
+        details: "Megah, adil, memimpin dengan kekuatan, menegakkan hukum.",
+        words: "Keadilan akan ditegakkan.",
+        sound: "sounds/raiden_shogun.mp3"
+    },
+    {
+        name: "Skirk",
+        gender: "female",
+        img: "images/skirk.png",
+        desc: "Lincah dan cerdas.",
+        details: "Lincah, cerdas, selalu menemukan jalan, penuh trik.",
+        words: "Aku tahu rahasianya.",
+        sound: "sounds/skirk.mp3"
+    },
+    {
+        name: "Tribbie",
+        gender: "female",
+        img: "images/tribbie.png",
+        desc: "Enerjik dan lucu.",
+        details: "Enerjik, lucu, membawa kegembiraan, selalu aktif.",
+        words: "Yey, seru!",
+        sound: "sounds/tribbie.mp3"
+    },
+    {
+        name: "Arlechinno",
+        gender: "female",
+        img: "images/arlechinno.png",
+        desc: "Misterius dan dramatis.",
+        details: "Misterius, dramatis, penuh teka-teki, selalu mengejutkan.",
+        words: "Mari kita main teka-teki.",
+        sound: "sounds/arlechinno.mp3"
+    },
+    {
+        name: "The Herta",
+        gender: "female",
+        img: "images/the_herta.png",
+        desc: "Genius dan eksentrik.",
+        details: "Genius, eksentrik, menciptakan hal-hal luar biasa, penuh ide.",
+        words: "Sains adalah jawabannya.",
+        sound: "sounds/the_herta.mp3"
+    },
+    {
+        name: "Ruanmei",
+        gender: "female",
+        img: "images/ruanmei.png",
+        desc: "Tenang dan analitis.",
+        details: "Tenang, analitis, mempelajari segalanya, selalu objektif.",
+        words: "Mari kita analisis.",
+        sound: "sounds/ruanmei.mp3"
+    },
+    {
+        name: "Evernight",
+        gender: "female",
+        img: "images/evernight.png",
+        desc: "Gelap dan kuat.",
+        details: "Gelap, kuat, menghadapi malam, penuh misteri.",
+        words: "Malam adalah sekutu ku.",
+        sound: "sounds/evernight.mp3"
+    },
+    {
+        name: "Danheng",
+        gender: "male",
+        img: "images/danheng.png",
+        desc: "Pendiam dan kuat.",
+        details: "Pendiam, kuat, melindungi, selalu waspada.",
+        words: "Aku akan menjaga.",
+        sound: "sounds/danheng.mp3"
+    },
+    {
+        name: "March",
+        gender: "female",
+        img: "images/march.png",
+        desc: "Ceria dan fotografer.",
+        details: "Ceria, fotografer, mengabadikan momen, selalu positif.",
+        words: "Klik! Bagus!",
+        sound: "sounds/march.mp3"
+    },
+    {
+        name: "Aglaea",
+        gender: "female",
+        img: "images/aglaea.png",
+        desc: "Anggun dan bijak.",
+        details: "Anggun, bijak, membawa keindahan, selalu elegan.",
+        words: "Keindahan ada di mana-mana.",
+        sound: "sounds/aglaea.mp3"
+    },
+    {
+        name: "Firefly",
+        gender: "female",
+        img: "images/firefly.png",
+        desc: "Bersinar dan pemberani.",
+        details: "Bersinar, pemberani, menerangi kegelapan, selalu berani.",
+        words: "Aku akan bersinar.",
+        sound: "sounds/firefly.mp3"
+    },
+    {
+        name: "Fugue",
+        gender: "female",
+        img: "images/fugue.png",
+        desc: "Misterius dan harmonis.",
+        details: "Misterius, harmonis, menciptakan musik, penuh melodi.",
+        words: "Mari dengarkan musiknya.",
+        sound: "sounds/fugue.mp3"
     }
 ];
 
@@ -200,13 +380,33 @@ const characterTraits = {
     "Aventurine": { leader: 2, warm: 2, smart: 2 },
     "Huohuo": { cautious: 2, brave: 2, gentle: 2 },
     "Wriothesley": { brave: 3, leader: 2, warm: 2 },
-    "Neuvillette": { leader: 3, smart: 2, brave: 1 }
+    "Neuvillette": { leader: 3, smart: 2, brave: 1 },
+    "Shorekeeper": { leader: 3, smart: 2, brave: 1 },
+    "Jane Doe": { smart: 3, cautious: 3 },
+    "Kiana": { brave: 3, leader: 2 },
+    "Dyroth Starlight": { brave: 3, leader: 2, smart: 2 },
+    "Ye Shunguang": { warm: 3, gentle: 2 },
+    "Astra Yao": { smart: 3, leader: 2 },
+    "Ciaccona": { brave: 2, leader: 2, smart: 1 },
+    "Brant": { brave: 3, gentle: 2 },
+    "Raiden Shogun": { leader: 3, brave: 2 },
+    "Skirk": { smart: 2, brave: 2 },
+    "Tribbie": { warm: 3, brave: 1 },
+    "Arlechinno": { smart: 2, cautious: 2 },
+    "The Herta": { smart: 3, leader: 1 },
+    "Ruanmei": { smart: 3, cautious: 2 },
+    "Evernight": { brave: 3, smart: 1 },
+    "Danheng": { brave: 2, leader: 2 },
+    "March": { warm: 3, gentle: 2 },
+    "Aglaea": { gentle: 3, smart: 2 },
+    "Firefly": { brave: 3, warm: 2 },
+    "Fugue": { smart: 2, gentle: 2 }
 };
 
 let nameMapping = {
     "rara": "Phainon",
     "kirana": "Wriothesley",
-    "hina": "galang", // Note: "galang" is not in characters list, assuming it's to be added later
+    "galang": "hina",
     "radja": "Yae Miko",
     "bryan": "Clorinde",
     "bryann": "Robin"
@@ -384,6 +584,7 @@ function rollCharacter(username) {
 
     document.body.style.backgroundImage = char.gender === "male" ?
         'url("images/sunset.jpg")' :
+        char.gender === "anomali" ? 'url("images/black.jpg")' :
         'url("images/taman_bunga.jpg")';
 
     new Audio(char.sound).play();
@@ -394,8 +595,31 @@ function rollCharacter(username) {
         robinBacksound.play();
     }
 
+    // Play backsound for Astra Yao
+    if (char.name === "Astra Yao") {
+        const astraYaoBacksound = new Audio("sounds/astra_yao_sound.mp3");
+        astraYaoBacksound.play();
+    }
+
+
     createParticles(char.gender);
     animateParticles();
+
+    // Gimmick untuk karakter anomali
+    if (char.gender === "anomali") {
+        // Shake effect
+        document.body.classList.add("shake");
+        setTimeout(() => {
+            document.body.classList.remove("shake");
+        }, 500);
+
+        // Show error message
+        const errorMsg = document.getElementById("errorMessage");
+        errorMsg.style.display = "block";
+        setTimeout(() => {
+            errorMsg.style.display = "none";
+        }, 2000);
+    }
 
     gacha.classList.add("hidden");
     result.classList.remove("hidden");
@@ -506,7 +730,7 @@ function createParticles(gender) {
             y: Math.random() * canvas.height,
             size: Math.random() * 5 + 2,
             speedY: Math.random() * 1 + 0.5,
-            type: gender === "male" ? "cloud" : "flower"
+            type: gender === "male" ? "cloud" : gender === "anomali" ? "star" : "flower"
         });
     }
 }
@@ -514,7 +738,9 @@ function createParticles(gender) {
 function animateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     particles.forEach(p => {
-        ctx.fillStyle = p.type === "cloud" ? "rgba(255,255,255,0.5)" : "rgba(255,182,193,0.7)";
+        ctx.fillStyle = p.type === "cloud" ? "rgba(255,255,255,0.5)" :
+            p.type === "star" ? "rgba(255,255,255,0.7)" :
+            "rgba(255,182,193,0.7)";
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();

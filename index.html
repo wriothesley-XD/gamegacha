@@ -35,6 +35,7 @@
                     <option value="">-- Pilih Gender --</option>
                     <option value="male">Laki-laki</option>
                     <option value="female">Perempuan</option>
+                    <option value="anomali">Anomali</option>
                 </select>
                 <input type="text" id="charImg" placeholder="Path gambar (cth: images/nama.png)" />
                 <input type="text" id="charSound" placeholder="Path suara (cth: sounds/nama.mp3)" />
@@ -96,6 +97,9 @@
 
     <!-- HASIL KARAKTER -->
     <div id="result" class="result hidden fadeIn"></div>
+
+    <!-- PESAN ERROR UNTUK ANOMALI -->
+    <div id="errorMessage">Error: Sistem tidak dapat memproses karakter ini</div>
 
     <script src="script.js"></script>
 </body>
