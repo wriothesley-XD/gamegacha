@@ -1,0 +1,166 @@
+{
+   "checksum": "a2d1807e8cdd70b2d8490a463c0a2612",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "children": [ {
+               "date_added": "13340306432201182",
+               "date_last_used": "13366697000547688",
+               "guid": "f6fa01db-b606-4432-919f-a537a2d68868",
+               "id": "7",
+               "name": "ASUS Homepage",
+               "show_icon": false,
+               "source": "sync",
+               "type": "url",
+               "url": "http://www.asus.com/",
+               "visit_count": 0
+            }, {
+               "date_added": "13256846395485939",
+               "date_last_used": "0",
+               "guid": "e639a19a-5290-424d-ad8b-eeae21595914",
+               "id": "8",
+               "name": "ASUS Member",
+               "show_icon": false,
+               "source": "sync",
+               "type": "url",
+               "url": "https://account.asus.com/",
+               "visit_count": 0
+            }, {
+               "date_added": "13366846407782918",
+               "date_last_used": "0",
+               "guid": "329c185c-1ead-493e-843e-d843289345ad",
+               "id": "9",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "SI-ASN INSTANSI",
+               "show_icon": false,
+               "source": "sync",
+               "type": "url",
+               "url": "https://siasn-instansi.bkn.go.id/tampilanData",
+               "visit_count": 0
+            }, {
+               "date_added": "13366846428285984",
+               "date_last_used": "13366846548070539",
+               "guid": "aae4f728-ef49-4877-afe7-c2d875dc777f",
+               "id": "10",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "MyASN BKN",
+               "show_icon": false,
+               "source": "sync",
+               "type": "url",
+               "url": "https://myasn.bkn.go.id/layanan-asn",
+               "visit_count": 0
+            }, {
+               "date_added": "13406687750135762",
+               "date_last_used": "0",
+               "guid": "1a6c43a3-76d3-4a3f-a873-6f53caf1bde1",
+               "id": "11",
+               "name": "New tab",
+               "show_icon": false,
+               "source": "sync",
+               "type": "url",
+               "url": "edge://newtab/",
+               "visit_count": 1
+            } ],
+            "date_added": "13289281515808463",
+            "date_last_used": "0",
+            "date_modified": "13406687750135762",
+            "guid": "e0da8598-2990-4b69-a3d0-5f4cc9f23b79",
+            "id": "6",
+            "name": "ASUS E-Service",
+            "source": "unknown",
+            "type": "folder"
+         }, {
+            "date_added": "13326024341296288",
+            "date_last_used": "13406487497401532",
+            "guid": "a39b5b1d-22e2-4d01-8c91-94555269a74c",
+            "id": "12",
+            "name": "https://www.paypal.com/myaccount/money/balances/withdraw",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://www.paypal.com/myaccount/money/balances/withdraw",
+            "visit_count": 2
+         }, {
+            "date_added": "13326475666398971",
+            "date_last_used": "0",
+            "guid": "1ba22492-54be-4cc0-b6ed-9a43e8bdd8b1",
+            "id": "13",
+            "name": "",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "chrome://newtab/",
+            "visit_count": 0
+         }, {
+            "date_added": "13335279174320527",
+            "date_last_used": "13372428671382089",
+            "guid": "1af549b5-4985-48ad-bd7b-c8ed110a7917",
+            "id": "14",
+            "name": "transalate - Search",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://www.bing.com/search?q=transalate&cvid=a511e77f5d554084afa7f7d0d455b2da&aqs=edge.0.69i59j0j69i57j0j46j0l3j69i60.3092j0j4&FORM=ANAB01&PC=ASTS",
+            "visit_count": 1
+         }, {
+            "date_added": "13337067017488297",
+            "date_last_used": "13337067033710434",
+            "guid": "0b8c42d8-d7c5-414b-801c-313340a1218c",
+            "id": "15",
+            "name": "kinerja.bkn.go id - Search",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://www.bing.com/search?pglt=41&q=kinerja.bkn.go+id&cvid=0488b238f96145069a4f3d23184031cd&aqs=edge.0.0j69i57j0l7.4411j0j1&FORM=ANAB01&PC=ASTS",
+            "visit_count": 0
+         }, {
+            "date_added": "13337067040576209",
+            "date_last_used": "13337067053063727",
+            "guid": "dfcb9a04-0b15-4a1f-bcb2-08a42c30dedf",
+            "id": "16",
+            "name": "eKinerja",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://kinerja.bkn.go.id/login",
+            "visit_count": 0
+         } ],
+         "date_added": "13409979943615909",
+         "date_last_used": "0",
+         "date_modified": "13337067040576209",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Favorites bar",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "other": {
+         "children": [  ],
+         "date_added": "13409979943615909",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Other favorites",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13409979943615909",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Mobile favorites",
+         "source": "unknown",
+         "type": "folder"
+      }
+   },
+   "sync_metadata": "CjEKDgiIgQISCKIqJkyaAQAAEgAqGFYxUXNZNWk3OW9QRjBvekM3d2hFZGc9PUgDoAYKEq0BCBASqAEKHEYvOElOTHc0OU9QclE0Q2RBN0ZLYXJ5dkR3MD0SJGRmY2I5YTA0LTBiMTUtNGExZi1iY2IyLTA4YTQyYzMwZGVkZhgAIAAoADCxg57rhjI44Le6s6ExQOC3urOhMUocMTlrUDRUTVZoWkdZaGoyVmdjbkwrdG4waDlnPVofIh33N3ZoV3N4bW5jSEl0enNVMnNvcnZvdVFWd1FRPWXRlQzhwj4CYAUSrQEIDxKoAQocSTFTSnNvTWFuWVplZlk0NnpaT0R3ZFZ4dWY4PRIkMGI4YzQyZDgtZDdjNS00MTRiLTgwMWMtMzEzMzQwYTEyMThjGAAgACgAMJmV1emjMzj1/7izoTFA9f+4s6ExShx3aHJvMWNMSFVVbmE4VkdtYTcxOFk1RGE1VzA9Wh8iHe5qMnRrOWc2cElVZDZzc01MZCsrR1dXaXM1VWc9ZXaFu7XCPgJgBRKtAQgOEqgBChxaU21JNy9QajlvTjAvbHRGci9yVndKWmhnR2c9EiQxYWY1NDliNS00OTg1LTQ4YWQtYmQ3Yi1jOGVkMTEwYTc5MTcYACAAKAAwnvCNkaUyOLjH996aMUC4x/femjFKHHZPanZKZDIwQ1A5bEt6TXRYZDNvSmdPMkNRYz1aHyId3XJueE8zMHFzelc1ZDBMK0tpa0ZCVlBVUkRvZz1lHWoqpcI+AmAFEq0BCA0SqAEKHC85NVpTWTN5WXdoYXRMREp5L01uM2pOYnRXbz0SJDFiYTIyNDkyLTU0YmUtNGNjMC1iNmVkLTlhNDNlOGJkZDhiMRgAIAAoADDUqZvkmTE4362b5JkxQN+tm+SZMUocU1BjUEJybjY2dzFTWUxacWQ2L3Q4TmR5cWd3PVofIh27Y3FQajRMTndxcjRoWnVxQWVwTmNTeit6VU1RPWUAAAAAwj4CYAUSrQEIChKoAQocZ1pkbThSMGRIZExJOHVLcWE2RkRyUUQ5d2c4PRIkYWFlNGY3MjgtZWY0OS00ODc3LWFmZTctYzJkODc1ZGM3NzdmGAAgACgAMIiY85qjMjic7a6rkDJAnO2uq5AyShx1NDkxc1U0U1EwMVRLdW9PVGZBQklrNG5SMFU9Wh8iHdB6Rm5WVFBrMEd2Z0ZJYW1PRmRrd21XWEVFR0E9ZfZYHoXCPgJgBRKsAQgMEqcBChwzZmhzR3dMeVZkQldmYmJxQXhnazFIa1JsVVE9EiRhMzliNWIxZC0yMmUyLTRkMDEtOGM5MS05NDU1NTI2OWE3NGMYACAAKAAw0fTZgaQzOMatm+SZMUDGrZvkmTFKHGVyWmxJeWdaRlB2ZWpiMkZtcm8xR3pzbXVocz1aHiIcdkVsbGhhY1E4UDdqZUk3WTdHRnhYbENFWlVnPWU6W9lVwj4CYAUSrQEICRKoAQocekxnU24zNE4zZUo4U2pKbHhGUnV1OURvODZ3PRIkMzI5YzE4NWMtMWVhZC00OTNlLTg0M2UtZDg0MzI4OTM0NWFkGAAgACgAMKXJrauQMjixza2rkDJAsc2tq5AyShxVbWpZMjJxWE4vTEdPL2lpa0VuZkFFUHRNWEE9Wh8iHaE3YnNXREQ5bXFPa3ArT1M0QlVZZEVWSGtoQUk9Zdns237CPgJgBRKsAQgIEqcBChxXbnNULzVZaXV1cndvMXc5MUh4RnhNd0k1Uk09EiRlNjM5YTE5YS01MjkwLTQyNGQtYWQ4Yi1lZWFlMjE1OTU5MTQYACAAKAAwl47Hse8vOJOQx7HvL0CTkMex7y9KHDVLSld6dWVEaE5Odk42QjFFMnptNUcvQWZ6dz1aHiIcQ3piQVdBZ0lNSGlUZ3RXM3RVNGJmZ1Zzb1BZPWUAAAAAwj4CYAUSrQEICxKoAQocaGNYUXVWV040TWpnMlFMamFXRFdKYld0UlA0PRIkMWE2YzQzYTMtNzZkMy00YTNmLWE4NzMtNmY1M2NhZjFiZGUxGAAgACgAMKHVmOGkMzjT3JjhpDNA09yY4aQzShw0TG1GSCtXZDJjZFFGdjRTMjFiSjRGSmNhc1E9Wh8iHeg3ckNydHVoQThZL3BZNm1vMHhCT2lpeWdPbzg9ZdivsALCPgJgBRKsAQgHEqcBChxwL0s0endaZjd2czNzOU9ZbnZzUEVkOENxOU09EiRmNmZhMDFkYi1iNjA2LTQ0MzItOTE5Zi1hNTM3YTJkNjg4NjgYACAAKAAwzcuO5I8yOPSPx7HvL0D0j8ex7y9KHCtQWXYzdE4wMjBNc21LRzhNMktyVGRFNTYvMD1aHiIcK3h2RVhYWG50aFVJR2crdHg3YkZBMlVqclV3PWUiHM3swj4CYAUSrAEIBhKnAQocUWdYVSs1M1hUZ1lYSUZKNzZOUUlYZU5hN0hFPRIkZTBkYTg1OTgtMjk5MC00YjY5LWEzZDAtNWY0Y2M5ZjIzYjc5GAAgACgAMJeOx7HvLzjXjsex7y9A147Hse8vShxOcEg3TXBwM21TUEJCQjNVSGplK281WUV5R1E9Wh4iHEc4eTdiM1NDTTc3R3U4TWVPbTJ2Q21tSTlTQT1lAAAAAMI+AmAAEo4BCAESiQEKHHl4Si82ZnZrZWNyN2twNUVRekI0dFdMcGRiRT0SJGM3ZTJmYWZiLWNhOTgtNWNlOS1iYTkwLTI1MmZlM2I5NmFhNhgAIAAoADDf4LrcsDA4vMeho+kvQLzHoaPpL0ocYVJDV0xnaEY5YjVJbnFLSUR2dUovanZRa0ZjPVoAZQAAAADCPgJgABKOAQgCEokBChxZY1NUb252RVNQd3FDczRMMmNyVmh2NjhMOTg9EiRmZjBmNDM2Yy1iODc5LTUyZjAtYWJhMy0zNTVmMzUzY2EwOGUYACAAKAAw3+C63LAwOIrIoaPpL0CKyKGj6S9KHG9QVmtod0JSYlY2NUtDV1IyK0lPTkhXb091OD1aAGUAAAAAwj4CYAASjgEIAxKJAQocbmpnRHU4OGVDcnZYcDg2cEQ3ZkhHY3FGcDg4PRIkZTdlMTAxY2UtZmY0ZC01YmM3LWIwMDEtZmUwMWNlYjU5Yzc4GAAgACgAMN/gutywMDjbx6Gj6S9A28eho+kvShx5ek5CMDFjbjU0QTdjUlUwdVQrL1BnbVR0VW89WgBlAAAAAMI+AmAAMAA4AA==",
+   "version": 1
+}

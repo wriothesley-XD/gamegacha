@@ -1,0 +1,15 @@
+2025/12/12-09:29:48.584 53b4 Reusing MANIFEST C:\Users\ASUS\Documents\game gacha\.vscode\edge-profile-headless\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
+2025/12/12-09:29:48.586 53b4 Recovering log #16
+2025/12/12-09:29:48.586 53b4 Reusing old log C:\Users\ASUS\Documents\game gacha\.vscode\edge-profile-headless\Default\EdgeCoupons/coupons_data.db/000016.log 
+2025/12/12-09:29:48.608 4fac Level-0 table #20: started
+2025/12/12-09:29:48.614 4fac Level-0 table #20: 672796 bytes OK
+2025/12/12-09:29:48.615 4fac Delete type=0 #16
+2025/12/12-09:29:48.616 4fac Compacting 4@0 + 1@1 files
+2025/12/12-09:29:48.619 4fac Generated table #21@0: 4 keys, 672703 bytes
+2025/12/12-09:29:48.619 4fac Compacted 4@0 + 1@1 files => 672703 bytes
+2025/12/12-09:29:48.621 4fac compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/12/12-09:29:48.622 4fac Delete type=2 #8
+2025/12/12-09:29:48.622 4fac Delete type=2 #11
+2025/12/12-09:29:48.622 4fac Delete type=2 #14
+2025/12/12-09:29:48.622 4fac Delete type=2 #17
+2025/12/12-09:29:48.622 4fac Delete type=2 #20

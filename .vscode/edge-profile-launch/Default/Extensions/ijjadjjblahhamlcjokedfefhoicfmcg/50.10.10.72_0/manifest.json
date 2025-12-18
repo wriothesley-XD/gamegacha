@@ -1,0 +1,30 @@
+{
+   "action": {
+      "default_popup": "nicecursorpopup.html"
+   },
+   "background": {
+      "service_worker": "nicecursorbackground.js"
+   },
+   "content_scripts": [ {
+      "all_frames": true,
+      "js": [ "nicecursorcontent.js" ],
+      "matches": [ "*://*/*" ],
+      "run_at": "document_start"
+   } ],
+   "description": "Genshin Impact custom cursor for chrome. New browser experience with Genshin Impact Game cursor. Created for Genshin Impact fans.",
+   "icons": {
+      "128": "img/icon128.png",
+      "16": "img/icon16.png",
+      "48": "img/icon48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjZo6VjfnnkLJ5W2TiSQpT3FeGLI+xA/hXKIae2+lS/L+7MrtYrzz2mnOQBuYy2PnP6RnuuR9oSUkG2uzEnRjtqvlvsW2UusBlMi7kYYcT/8n6AMUhCcMggxx/nN1Lq8AyOuv5k0jw+Oe8GrFrv+9lpUVZl/qrrOLSyk4oFselioHvxgbq4IeWwsaayg5DnijJgUGHLLCu2dzsr1QmAxo+i08TG5f0gBx23z6KfrGvblX3gBVVM6h7ovLDHYJWl3saFz0KJQ5O9EqrKMyEonG6FHLtH/EJaGtWYO5Ez/H0M/YLMdc0yXSITnAraW+aNHlHtHrCG3HEfVrcIhjXejOKQIDAQAB",
+   "manifest_version": 3,
+   "name": "Genshin Impact Cursor",
+   "permissions": [ "storage" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "50.10.10.72",
+   "web_accessible_resources": [ {
+      "matches": [ "*://*/*" ],
+      "resources": [ "cur/*.*" ]
+   } ]
+}

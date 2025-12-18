@@ -1,0 +1,5 @@
+{"logTime": "1212/022546", {"lineNo":0,"logLevel":2,"message":"MaybeOrchestrateMigration: MaybeOrchestrateMigration","source":"Workspace Migration","timestamp":"2025-12-12T02:25:46.346Z"}}
+{"logTime": "1212/022546", {"lineNo":0,"logLevel":2,"message":"Migrate_FeatureCheck: Migrate_FeatureCheck","source":"Workspace Migration","timestamp":"2025-12-12T02:25:46.347Z"}}
+{"logTime": "1212/022546", {"lineNo":0,"logLevel":2,"message":"Migrate_FeatureCheck: Spaceworks not enabled, ineligible for migration","source":"Workspace Migration","timestamp":"2025-12-12T02:25:46.347Z"}}
+{"logTime": "1212/022546", {"lineNo":0,"logLevel":2,"message":"MaybeOrchestrateMigration: ~MaybeOrchestrateMigration","source":"Workspace Migration","timestamp":"2025-12-12T02:25:46.347Z"}}
+{"logTime": "1212/022634", {"lineNo":0,"logLevel":2,"message":"WorkspaceManager: count of workspaces on close: 0","source":"Fluid Local Collaborator","timestamp":"2025-12-12T02:26:34.218Z"}}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gacha Personality</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- PARTIKEL -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- HALAMAN AWAL -->
+    <div class="container fadeIn" id="home">
+        <h1>Masukkan Nama Kamu</h1>
+        <input type="text" id="username" placeholder="Nama kamu..." />
+        <div class="gacha-buttons">
+            <button onclick="startQuiz('personality')">🔍 Kamu Mirip Siapa?</button>
+            <button onclick="startQuiz('compatibility')">💕 Pasangan Mu?</button>
+        </div>
+        <button id="adminBtn" class="admin-btn">⚙️ Kelola Karakter</button>
+    </div>
+
+    <!-- PANEL ADMIN TAMBAH KARAKTER -->
+    <div id="adminPanel" class="container hidden fadeIn">
+        <h1>Kelola Karakter</h1>
+        <div class="admin-content">
+            <div class="form-section">
+                <h3>Tambah Karakter Baru</h3>
+                <input type="text" id="charName" placeholder="Nama Karakter..." />
+                <select id="charGender">
+                    <option value="">-- Pilih Gender --</option>
+                    <option value="male">Laki-laki</option>
+                    <option value="female">Perempuan</option>
+                </select>
+                <input type="text" id="charImg" placeholder="Path gambar (cth: images/nama.png)" />
+                <input type="text" id="charSound" placeholder="Path suara (cth: sounds/nama.mp3)" />
+                <textarea id="charDesc" placeholder="Deskripsi singkat..." maxlength="50"></textarea>
+                <textarea id="charDetails" placeholder="Detail lengkap..."></textarea>
+                <textarea id="charWords" placeholder="Kata-kata karakter..."></textarea>
+
+                <div class="traits-form">
+                    <label>Trait (0-3):</label>
+                    <div class="trait-grid">
+                        <div><label>Brave:</label><input type="number" id="traitBrave" min="0" max="3" value="0" /></div>
+                        <div><label>Smart:</label><input type="number" id="traitSmart" min="0" max="3" value="0" /></div>
+                        <div><label>Gentle:</label><input type="number" id="traitGentle" min="0" max="3" value="0" /></div>
+                        <div><label>Leader:</label><input type="number" id="traitLeader" min="0" max="3" value="0" /></div>
+                        <div><label>Warm:</label><input type="number" id="traitWarm" min="0" max="3" value="0" /></div>
+                        <div><label>Cautious:</label><input type="number" id="traitCautious" min="0" max="3" value="0" /></div>
+                    </div>
+                </div>
+
+                <button onclick="addCharacter()">Tambah Karakter</button>
+            </div>
+
+            <div class="list-section">
+                <h3>Daftar Karakter</h3>
+                <div id="characterList" class="character-list"></div>
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <div class="form-section">
+                <h3>Kelola Mapping Nama</h3>
+                <input type="text" id="mapName" placeholder="Nama (cth: rara)" />
+                <select id="mapCharacter">
+                    <option value="">-- Pilih Karakter --</option>
+                </select>
+                <button onclick="addNameMapping()">Tambah Mapping</button>
+            </div>
+
+            <div class="list-section">
+                <h3>Daftar Mapping Nama</h3>
+                <div id="nameMappingList" class="character-list"></div>
+            </div>
+        </div>
+
+        <button onclick="closeAdmin()" class="back-btn">← Kembali</button>
+    </div>
+
+    <!-- HALAMAN QUIZ -->
+    <div id="quiz" class="container hidden fadeIn">
+        <h1>Pertanyaan Kepribadian</h1>
+        <div id="quizContent"></div>
+    </div>
+
+    <!-- ANIMASI GACHA -->
+    <div id="gachaAnim" class="hidden gacha-box">
+        <div class="spinner"></div>
+        <p>Rolling...</p>
+    </div>
+
+    <!-- HASIL KARAKTER -->
+    <div id="result" class="result hidden fadeIn"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
