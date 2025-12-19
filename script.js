@@ -587,7 +587,15 @@ function rollCharacter(username) {
         char.gender === "anomali" ? 'url("images/black.jpg")' :
         'url("images/taman_bunga.jpg")';
 
-    new Audio(char.sound).play();
+    if (char.gender === "anomali") {
+        const anomalyAudio = new Audio("sounds/anomali.mp3");
+        anomalyAudio.addEventListener('ended', () => {
+            new Audio(char.sound).play();
+        });
+        anomalyAudio.play();
+    } else {
+        new Audio(char.sound).play();
+    }
 
     // Play backsound for Robin
     if (char.name === "Robin") {
@@ -871,12 +879,6 @@ function addCharacter() {
         return;
     }
 
-    // Cek duplicate
-    if (characters.some(c => c.name === name)) {
-        alert("Karakter dengan nama ini sudah ada!");
-        return;
-    }
-
     const traits = {
         brave: parseInt(document.getElementById("traitBrave").value) || 0,
         smart: parseInt(document.getElementById("traitSmart").value) || 0,
@@ -886,25 +888,60 @@ function addCharacter() {
         cautious: parseInt(document.getElementById("traitCautious").value) || 0
     };
 
-    const newChar = { name, gender, img, sound, desc, details, words };
+    if (editingCharName) {
+        // Update existing character
+        const charIndex = characters.findIndex(c => c.name === editingCharName);
+        if (charIndex !== -1) {
+            characters[charIndex] = { name, gender, img, sound, desc, details, words };
+            characterTraits[name] = traits;
 
-    // Tambah ke array
-    characters.push(newChar);
-    characterTraits[name] = traits;
+            // Update localStorage
+            let stored = localStorage.getItem("customCharacters");
+            const customChars = stored ? JSON.parse(stored) : [];
+            const customIndex = customChars.findIndex(c => c.name === editingCharName);
+            if (customIndex !== -1) {
+                customChars[customIndex] = { name, gender, img, sound, desc, details, words };
+                localStorage.setItem("customCharacters", JSON.stringify(customChars));
+            }
 
-    // Simpan ke localStorage
-    let stored = localStorage.getItem("customCharacters");
-    const customChars = stored ? JSON.parse(stored) : [];
-    customChars.push(newChar);
-    localStorage.setItem("customCharacters", JSON.stringify(customChars));
+            // Update traits
+            let storedTraits = localStorage.getItem("customTraits");
+            const customTraits = storedTraits ? JSON.parse(storedTraits) : {};
+            delete customTraits[editingCharName];
+            customTraits[name] = traits;
+            localStorage.setItem("customTraits", JSON.stringify(customTraits));
 
-    // Simpan traits
-    let storedTraits = localStorage.getItem("customTraits");
-    const customTraits = storedTraits ? JSON.parse(storedTraits) : {};
-    customTraits[name] = traits;
-    localStorage.setItem("customTraits", JSON.stringify(customTraits));
+            alert(`Karakter ${name} berhasil diupdate!`);
+        }
+        editingCharName = null;
+    } else {
+        // Cek duplicate
+        if (characters.some(c => c.name === name)) {
+            alert("Karakter dengan nama ini sudah ada!");
+            return;
+        }
 
-    alert(`Karakter ${name} berhasil ditambahkan!`);
+        const newChar = { name, gender, img, sound, desc, details, words };
+
+        // Tambah ke array
+        characters.push(newChar);
+        characterTraits[name] = traits;
+
+        // Simpan ke localStorage
+        let stored = localStorage.getItem("customCharacters");
+        const customChars = stored ? JSON.parse(stored) : [];
+        customChars.push(newChar);
+        localStorage.setItem("customCharacters", JSON.stringify(customChars));
+
+        // Simpan traits
+        let storedTraits = localStorage.getItem("customTraits");
+        const customTraits = storedTraits ? JSON.parse(storedTraits) : {};
+        customTraits[name] = traits;
+        localStorage.setItem("customTraits", JSON.stringify(customTraits));
+
+        alert(`Karakter ${name} berhasil ditambahkan!`);
+    }
+
     resetForm();
     refreshCharacterList();
 }
@@ -956,6 +993,8 @@ function resetForm() {
     document.getElementById("mapCharacter").value = "";
 }
 
+let editingCharName = null;
+
 function refreshCharacterList() {
     const list = document.getElementById("characterList");
     list.innerHTML = "";
@@ -972,15 +1011,41 @@ function refreshCharacterList() {
             <div class="char-item">
                 <div class="info">
                     <div class="name">${char.name}</div>
-                    <div class="gender">${char.gender === "male" ? "♂ Laki-laki" : "♀ Perempuan"}</div>
+                    <div class="gender">${char.gender === "male" ? "♂ Laki-laki" : char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}</div>
                     <small style="color: #999;">${traitText}</small>
                 </div>
                 <div class="char-actions">
+                    <button class="char-item-btn ${isCustom ? "" : "disabled"}" onclick="editCharacter('${char.name}')" ${!isCustom ? "disabled" : ""}>Edit</button>
                     <button class="char-item-btn ${isCustom ? "" : "disabled"}" onclick="deleteCharacter('${char.name}')" ${!isCustom ? "disabled" : ""}>Hapus</button>
                 </div>
             </div>
         `;
     });
+}
+
+function editCharacter(name) {
+    const char = characters.find(c => c.name === name);
+    if (!char) return;
+
+    editingCharName = name;
+
+    document.getElementById("charName").value = char.name;
+    document.getElementById("charGender").value = char.gender;
+    document.getElementById("charImg").value = char.img;
+    document.getElementById("charSound").value = char.sound;
+    document.getElementById("charDesc").value = char.desc;
+    document.getElementById("charDetails").value = char.details;
+    document.getElementById("charWords").value = char.words;
+
+    const traits = characterTraits[name] || {};
+    document.getElementById("traitBrave").value = traits.brave || 0;
+    document.getElementById("traitSmart").value = traits.smart || 0;
+    document.getElementById("traitGentle").value = traits.gentle || 0;
+    document.getElementById("traitLeader").value = traits.leader || 0;
+    document.getElementById("traitWarm").value = traits.warm || 0;
+    document.getElementById("traitCautious").value = traits.cautious || 0;
+
+    document.getElementById("addCharBtn").textContent = "Update Karakter";
 }
 
 window.addEventListener('resize', () => {
