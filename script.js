@@ -482,6 +482,121 @@ let gachaMode = "personality"; // "personality" atau "compatibility"
 
 document.getElementById("adminBtn").addEventListener("click", openAdmin);
 
+function openBrowse() {
+    document.getElementById("home").classList.add("hidden");
+    document.getElementById("browsePanel").classList.remove("hidden");
+    displayBrowseCharacters();
+}
+
+function closeBrowse() {
+    document.getElementById("browsePanel").classList.add("hidden");
+    document.getElementById("home").classList.remove("hidden");
+}
+
+function openTutorial() {
+    document.getElementById("tutorialModal").classList.remove("hidden");
+}
+
+function closeTutorial() {
+    document.getElementById("tutorialModal").classList.add("hidden");
+}
+
+function displayBrowseCharacters() {
+    const list = document.getElementById("browseCharacterList");
+    list.innerHTML = "";
+    characters.forEach(char => {
+        const traits = characterTraits[char.name];
+        const traitText = traits ? Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${k}: ${v}`).join(", ") : "N/A";
+
+        list.innerHTML += `
+            <div class="char-item">
+                <img src="${char.img}" alt="${char.name}" class="char-thumbnail" onerror="this.style.display='none'">
+                <div class="info">
+                    <div class="name">${char.name}</div>
+                    <div class="gender">${char.gender === "male" ? "♂ Laki-laki" : char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}</div>
+                    <div class="desc">${char.desc}</div>
+                    <small style="color: #999;">${traitText}</small>
+                </div>
+                <div class="char-actions">
+                    <button class="char-item-btn" onclick="viewCharacter('${char.name}')">Lihat Detail</button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function filterCharacters() {
+    const searchTerm = document.getElementById("searchName").value.toLowerCase();
+    const genderFilter = document.getElementById("filterGender").value;
+    const traitFilter = document.getElementById("filterTrait").value;
+
+    const list = document.getElementById("browseCharacterList");
+    list.innerHTML = "";
+
+    characters.forEach(char => {
+        const matchesSearch = char.name.toLowerCase().includes(searchTerm);
+        const matchesGender = !genderFilter || char.gender === genderFilter;
+        const traits = characterTraits[char.name] || {};
+        const matchesTrait = !traitFilter || (traits[traitFilter] && traits[traitFilter] > 0);
+
+        if (matchesSearch && matchesGender && matchesTrait) {
+            const traitText = traits ? Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${k}: ${v}`).join(", ") : "N/A";
+
+            list.innerHTML += `
+                <div class="char-item">
+                    <img src="${char.img}" alt="${char.name}" class="char-thumbnail" onerror="this.style.display='none'">
+                    <div class="info">
+                        <div class="name">${char.name}</div>
+                        <div class="gender">${char.gender === "male" ? "♂ Laki-laki" : char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}</div>
+                        <div class="desc">${char.desc}</div>
+                        <small style="color: #999;">${traitText}</small>
+                    </div>
+                    <div class="char-actions">
+                        <button class="char-item-btn" onclick="viewCharacter('${char.name}')">Lihat Detail</button>
+                    </div>
+                </div>
+            `;
+        }
+    });
+}
+
+function viewCharacter(name) {
+    const char = characters.find(c => c.name === name);
+    if (!char) return;
+
+    const traits = characterTraits[name];
+    const traitText = traits ? Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${k}: ${v}`).join(", ") : "N/A";
+
+    document.getElementById("result").innerHTML = `
+        <h2>Detail Karakter</h2>
+        <div class="char-card fadeIn">
+            <div class="char-card-top">
+                <img src="${char.img}" alt="${char.name}">
+                <div class="char-info">
+                    <h1>${char.name}</h1>
+                    <p><strong>Gender:</strong> ${char.gender === "male" ? "Laki-laki" : char.gender === "anomali" ? "Anomali" : "Perempuan"}</p>
+                    <p><strong>Deskripsi:</strong> ${char.desc}</p>
+                    <p><strong>Ciri-ciri:</strong> ${char.details}</p>
+                    <p><strong>Trait:</strong> ${traitText}</p>
+                </div>
+            </div>
+            <div class="char-card-bottom">
+                <img src="${char.img}" alt="${char.name}">
+                <p class="char-words">"${char.words}"</p>
+            </div>
+        </div>
+        <button onclick="closeCharacterView()">← Kembali ke Jelajah</button>
+    `;
+
+    document.getElementById("browsePanel").classList.add("hidden");
+    document.getElementById("result").classList.remove("hidden");
+}
+
+function closeCharacterView() {
+    document.getElementById("result").classList.add("hidden");
+    document.getElementById("browsePanel").classList.remove("hidden");
+}
+
 // Load karakter dari localStorage saat halaman muat
 window.addEventListener("load", () => {
     loadCharactersFromStorage();
@@ -571,9 +686,32 @@ function previousQuestion() {
 }
 
 function startGachaAnimation() {
+    // Play gacha spin sound
+    new Audio('gacha.mp3').play();
+
     document.getElementById("quiz").classList.add("hidden");
     document.getElementById("gachaAnim").classList.remove("hidden");
-    setTimeout(() => rollCharacter(username), 2000);
+
+    // Animate gacha text
+    const gachaText = document.getElementById("gachaText");
+    const messages = [
+        "Sedang mencari karakter terbaik...",
+        "Menganalisis kepribadianmu...",
+        "Memproses data...",
+        "Hampir selesai...",
+        "Siap-siap melihat hasilnya!"
+    ];
+
+    let messageIndex = 0;
+    const textInterval = setInterval(() => {
+        gachaText.textContent = messages[messageIndex];
+        messageIndex = (messageIndex + 1) % messages.length;
+    }, 400);
+
+    setTimeout(() => {
+        clearInterval(textInterval);
+        rollCharacter(username);
+    }, 2000);
 }
 
 function rollCharacter(username) {
@@ -868,8 +1006,8 @@ function closeAdmin() {
 function addCharacter() {
     const name = document.getElementById("charName").value.trim();
     const gender = document.getElementById("charGender").value;
-    const img = document.getElementById("charImg").value.trim();
-    const sound = document.getElementById("charSound").value.trim();
+    let img = document.getElementById("charImg").value.trim();
+    let sound = document.getElementById("charSound").value.trim();
     const desc = document.getElementById("charDesc").value.trim();
     const details = document.getElementById("charDetails").value.trim();
     const words = document.getElementById("charWords").value.trim();
@@ -877,6 +1015,14 @@ function addCharacter() {
     if (!name || !gender || !img || !sound || !desc || !details || !words) {
         alert("Isi semua field ya!");
         return;
+    }
+
+    // Auto-prepend folder paths if not present
+    if (!img.startsWith("images/")) {
+        img = "images/" + img;
+    }
+    if (!sound.startsWith("sounds/")) {
+        sound = "sounds/" + sound;
     }
 
     const traits = {
@@ -1015,8 +1161,8 @@ function refreshCharacterList() {
                     <small style="color: #999;">${traitText}</small>
                 </div>
                 <div class="char-actions">
-                    <button class="char-item-btn ${isCustom ? "" : "disabled"}" onclick="editCharacter('${char.name}')" ${!isCustom ? "disabled" : ""}>Edit</button>
-                    <button class="char-item-btn ${isCustom ? "" : "disabled"}" onclick="deleteCharacter('${char.name}')" ${!isCustom ? "disabled" : ""}>Hapus</button>
+                    <button class="char-item-btn ${isCustom ? "" : "disabled"}" onclick="editCharacter('${char.name}')" ${!isCustom ? "disabled" : ""}>Edit Karakter</button>
+                    <button class="char-item-btn ${isCustom ? "" : "disabled"}" onclick="deleteCharacter('${char.name}')" ${!isCustom ? "disabled" : ""}>Hapus Karakter</button>
                 </div>
             </div>
         `;
