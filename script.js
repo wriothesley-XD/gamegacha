@@ -3,7 +3,7 @@ const characters = [{
         gender: "female",
         img: "images/clorinde.png",
         desc: "Cewe tangguh dan gesit.",
-        details: "Pintar, gesit, suka membantu teman, selalu berani menghadapi rintangan sulit, dan memiliki hati yang besar.",
+        details: "Clorinde adalah sosok yang sangat tangguh dan gesit, selalu siap menghadapi tantangan apapun dengan keberanian luar biasa. Ia memiliki kecerdasan tinggi dalam menganalisis situasi dan membuat keputusan cepat. Meskipun terlihat tegas, ia sangat perhatian terhadap teman-teman dan selalu siap membantu orang yang membutuhkan. Hatinya yang besar membuatnya menjadi sosok yang dapat diandalkan dalam situasi sulit, dan ia tidak pernah ragu untuk melindungi mereka yang ia sayangi.",
         words: "Aku nggak takut menghadapi tantangan apapun!",
         sound: "sounds/clorinde.mp3"
     },
@@ -12,7 +12,7 @@ const characters = [{
         gender: "male",
         img: "images/phainon.png",
         desc: "Cowo pejuang penuh semangat.",
-        details: "Berani, setia, punya strategi hebat, selalu melindungi teman-temannya.",
+        details: "Phainon adalah pejuang yang penuh semangat dan keberanian, selalu siap melindungi teman-temannya dengan segala cara. Ia memiliki strategi yang hebat dalam menghadapi musuh dan situasi berbahaya. Kesetiaannya yang tinggi membuatnya menjadi sahabat yang dapat dipercaya sepenuhnya. Meskipun terlihat keras dari luar, ia memiliki sisi hangat dan peduli terhadap orang-orang terdekatnya, selalu berusaha menciptakan harmoni di sekitarnya.",
         words: "Aku akan melindungimu sampai akhir.",
         sound: "sounds/phainon.mp3"
     },
@@ -21,7 +21,7 @@ const characters = [{
         gender: "female",
         img: "images/cyrene.png",
         desc: "Cewe pejuang dengan cinta.",
-        details: "Penyayang, tegas, penuh kasih sayang, selalu mendukung teman.",
+        details: "Cyrene adalah pejuang yang menggabungkan kekuatan dengan cinta yang mendalam. Ia tegas dalam menghadapi musuh namun selalu penuh kasih sayang terhadap teman dan keluarga. Kepemimpinannya yang alami membuatnya mampu memotivasi orang lain untuk menjadi lebih baik. Ia percaya bahwa cinta adalah sumber kekuatan terbesar, dan selalu mendukung orang-orang di sekitarnya dengan penuh empati dan kehangatan.",
         words: "Cinta dan keberanian adalah kekuatanku.",
         sound: "sounds/cyrene.mp3"
     },
@@ -30,7 +30,7 @@ const characters = [{
         gender: "female",
         img: "images/yanagi.png",
         desc: "Gesit dan keibuan.",
-        details: "Selalu memperhatikan teman, cekatan, penuh kasih sayang, dan bijaksana.",
+        details: "Yanagi adalah sosok yang gesit dan penuh keibuan, selalu memperhatikan kebutuhan teman-teman dengan teliti. Kecakapannya dalam berbagai hal membuatnya menjadi orang yang andal dalam situasi apapun. Ia bijaksana dalam memberikan nasihat dan selalu berusaha menciptakan suasana yang nyaman bagi orang lain. Meskipun terlihat tenang, ia memiliki kekuatan batin yang besar dan selalu siap membantu dengan penuh kasih sayang.",
         words: "Jangan khawatir, aku akan selalu di sini.",
         sound: "sounds/yanagi.mp3"
     },
@@ -39,7 +39,7 @@ const characters = [{
         gender: "female",
         img: "images/vivian.png",
         desc: "Lembut dan romantis.",
-        details: "Ramah, penyayang, punya jiwa seni, selalu mendukung orang di sekitarnya.",
+        details: "Vivian adalah sosok yang lembut dan romantis, selalu melihat keindahan dalam segala hal. Jiwa seninya yang tinggi membuatnya mampu menciptakan suasana yang indah dan inspiratif. Ia ramah terhadap semua orang dan selalu mendukung orang di sekitarnya dengan penuh perhatian. Kehangatannya yang alami membuatnya mudah didekati, dan ia percaya bahwa cinta dan kebaikan dapat mengubah dunia menjadi tempat yang lebih baik.",
         words: "Hidup terasa indah dengan cinta.",
         sound: "sounds/vivian.mp3"
     },
@@ -48,7 +48,7 @@ const characters = [{
         gender: "female",
         img: "images/yae_miko.png",
         desc: "Jahil & mengerikan tapi baik.",
-        details: "Cerdik, nakal tapi perhatian, bisa membuat orang tertawa, pintar menyelesaikan masalah.",
+        details: "Yae Miko adalah sosok yang jahil dan terlihat mengerikan dari luar, namun sebenarnya memiliki hati yang baik dan perhatian. Kecerdikannya yang tinggi membuatnya selalu bisa menemukan solusi kreatif untuk berbagai masalah. Ia bisa membuat orang tertawa dengan kelakuannya yang unik, namun juga sangat peduli terhadap teman-teman. Meskipun terlihat nakal, ia selalu bertindak demi kebaikan bersama.",
         words: "Hati-hati, aku bisa muncul di mana saja!",
         sound: "sounds/yae_miko.mp3"
     },
@@ -57,7 +57,7 @@ const characters = [{
         gender: "female",
         img: "images/hina.png",
         desc: "Imut dan mandiri.",
-        details: "Lincah, mandiri, selalu ingin belajar hal baru, punya semangat tinggi.",
+        details: "Hina adalah sosok yang imut namun sangat mandiri, selalu ingin belajar hal-hal baru dan mengembangkan diri. Kelincahannya membuatnya mampu beradaptasi dengan cepat dalam situasi apapun. Semangatnya yang tinggi mendorongnya untuk terus maju dan tidak pernah menyerah. Ia percaya bahwa dengan usaha sendiri, ia bisa mencapai apa saja, namun tetap terbuka untuk menerima bantuan dari orang lain ketika dibutuhkan.",
         words: "Aku bisa melakukan ini sendiri!",
         sound: "sounds/hina.mp3"
     },
@@ -66,7 +66,7 @@ const characters = [{
         gender: "female",
         img: "images/cerydra.png",
         desc: "Pemimpin tegas dan tangguh.",
-        details: "Bijaksana, kuat, adil, mampu memimpin tim dengan baik dan penuh tanggung jawab.",
+        details: "Cerydra adalah pemimpin yang tegas dan tangguh, selalu memimpin tim dengan bijaksana dan penuh tanggung jawab. Kekuatannya yang luar biasa membuatnya mampu menghadapi tantangan besar. Ia adil dalam setiap keputusan dan selalu memikirkan kepentingan kelompok. Meskipun terlihat keras, ia memiliki hati yang peduli dan selalu berusaha menciptakan lingkungan yang harmonis bagi semua orang.",
         words: "Ikuti aku, kita bisa melewati ini bersama.",
         sound: "sounds/cerydra.mp3"
     },
@@ -75,7 +75,7 @@ const characters = [{
         gender: "female",
         img: "images/hysilens.png",
         desc: "Kesatria setia dan kuat.",
-        details: "Setia, berani, mampu menghadapi bahaya demi teman, penuh kehormatan.",
+        details: "Hysilens adalah kesatria yang setia dan kuat, selalu siap menghadapi bahaya demi melindungi teman-teman. Kehormatannya yang tinggi membuatnya menjadi sosok yang dapat dipercaya sepenuhnya. Ia berani dalam pertempuran namun juga memiliki sisi lembut yang peduli terhadap orang lain. Kesetiaannya tidak pernah goyah, dan ia selalu berdiri di garis depan untuk menjaga mereka yang ia sayangi.",
         words: "Aku akan selalu berdiri di sampingmu.",
         sound: "sounds/hysilens.mp3"
     },
@@ -84,7 +84,7 @@ const characters = [{
         gender: "female",
         img: "images/kafka.png",
         desc: "Killer keibuan penuh misteri.",
-        details: "Tangguh, misterius, penyayang pada yang lemah, cerdas dalam strategi.",
+        details: "Kafka adalah sosok yang tangguh dan misterius, selalu melindungi yang lemah dengan cara yang unik. Kecerdasannya dalam strategi membuatnya selalu selangkah di depan musuh. Ia memiliki sisi keibuan yang kuat namun juga penuh misteri yang membuat orang penasaran. Meskipun terlihat dingin, ia sangat peduli terhadap orang-orang terdekatnya dan selalu berusaha menciptakan keamanan bagi mereka.",
         words: "Jangan remehkan sisi lembutku.",
         sound: "sounds/kafka.mp3"
     },
@@ -93,7 +93,7 @@ const characters = [{
         gender: "female",
         img: "images/miyabi.png",
         desc: "Tangguh dan badass.",
-        details: "Berani, tegas, handal dalam pertarungan, tidak mudah menyerah.",
+        details: "Miyabi adalah sosok yang sangat tangguh dan badass, tidak pernah takut menghadapi tantangan apapun. Keterampilannya dalam pertarungan membuatnya menjadi lawan yang berbahaya. Ia tegas dalam prinsip namun juga memiliki keberanian yang luar biasa. Meskipun terlihat keras, ia memiliki kode etik yang kuat dan selalu melindungi yang benar. Ia tidak mudah menyerah dan selalu bangkit dari setiap kegagalan.",
         words: "Aku tidak takut siapa pun!",
         sound: "sounds/miyabi.mp3"
     },
@@ -101,9 +101,9 @@ const characters = [{
         name: "Robin",
         gender: "female",
         img: "images/robin.png",
-        desc: "Ceria & bersuara indah.",
-        details: "Optimis, ceria, memiliki bakat menyanyi, selalu menyemangati teman.",
-        words: "Ayo tersenyum bersama!",
+        desc: "Misterius dan penuh rahasia.",
+        details: "Robin adalah sosok yang sangat misterius dan penuh rahasia, selalu mencari kebenaran di balik segala hal. Ia penuh rahasia namun memiliki kecerdasan yang luar biasa dalam menganalisis situasi. Misterinya membuat orang penasaran, namun ia selalu bertindak demi kebaikan. Ia percaya bahwa pengetahuan adalah kunci untuk memahami dunia, dan selalu berusaha mengungkap misteri-misteri yang ada.",
+        words: "Siapa aku sebenarnya?",
         sound: "sounds/robin.mp3"
     },
     {
@@ -111,7 +111,7 @@ const characters = [{
         gender: "male",
         img: "images/sunday.png",
         desc: "Gelap → bertobat.",
-        details: "Misterius, pernah salah, kini berusaha menebus kesalahan, setia pada teman.",
+        details: "Sunday adalah sosok yang dulunya gelap dan misterius, namun kini berusaha menebus kesalahannya dengan sungguh-sungguh. Ia belajar dari masa lalu dan berusaha menjadi lebih baik setiap hari. Kesetiaannya terhadap teman-teman tidak pernah goyah, dan ia selalu siap membantu mereka yang membutuhkan. Perjalanan pertobatannya membuatnya lebih bijaksana dan peduli terhadap dampak tindakannya terhadap orang lain.",
         words: "Aku berjanji untuk berubah.",
         sound: "sounds/sunday.mp3"
     },
@@ -120,7 +120,6 @@ const characters = [{
         gender: "male",
         img: "images/mydei.png",
         desc: "Pemarah tapi baik & suka anak-anak.",
-        details: "Pemarah tapi berhati lembut, penyayang anak-anak, selalu peduli teman.",
         words: "Jangan membuatku marah, tapi aku akan selalu menolongmu.",
         sound: "sounds/mydei.mp3"
     },
@@ -129,7 +128,7 @@ const characters = [{
         gender: "male",
         img: "images/anaxa.png",
         desc: "Dosen pintar & sensitif.",
-        details: "Cerdas, peka terhadap perasaan orang lain, sabar, menyukai belajar dan mengajar.",
+        details: "Anaxa adalah sosok yang cerdas dan sensitif, selalu peka terhadap perasaan orang lain. Kesabarannya yang tinggi membuatnya menjadi pendidik yang baik dan sabar. Ia menyukai belajar dan mengajar, dan selalu berusaha berbagi pengetahuan dengan orang lain. Kecerdasannya tidak hanya intelektual, namun juga emosional, membuatnya mampu memahami dan membantu orang lain dengan lebih baik.",
         words: "Ilmu adalah kekuatan.",
         sound: "sounds/anaxa.mp3"
     },
@@ -138,7 +137,7 @@ const characters = [{
         gender: "female",
         img: "images/acheron.png",
         desc: "Pendiam & menggetarkan.",
-        details: "Tenang, misterius, kata-katanya berwibawa, memiliki aura yang kuat.",
+        details: "Acheron adalah sosok yang pendiam namun memiliki aura yang sangat menggetarkan. Kata-katanya yang jarang namun berwibawa selalu meninggalkan kesan mendalam. Ia tenang dalam menghadapi situasi apapun dan selalu berpikir sebelum bertindak. Misterinya membuat orang penasaran, namun kekuatannya yang luar biasa membuatnya menjadi sosok yang dihormati. Diamnya bukan berarti lemah, melainkan kekuatan yang terkendali.",
         words: "Diamku bukan lemahku.",
         sound: "sounds/acheron.mp3"
     },
@@ -147,7 +146,7 @@ const characters = [{
         gender: "male",
         img: "images/aventurine.png",
         desc: "Gentleman penuh percaya diri.",
-        details: "Sopan, percaya diri, selalu menjaga martabat, ramah pada semua orang.",
+        details: "Aventurine adalah gentleman yang penuh percaya diri, selalu menjaga martabat dan sopan santun dalam setiap tindakan. Ia ramah terhadap semua orang dan selalu berusaha menciptakan suasana yang nyaman. Kepercayaan dirinya yang tinggi membuatnya mampu menghadapi tantangan dengan tenang. Ia percaya bahwa dengan sikap yang baik dan percaya diri, ia bisa mencapai apa saja dan menginspirasi orang lain.",
         words: "Kepercayaan diri adalah kunci.",
         sound: "sounds/aventurine.mp3"
     },
@@ -156,7 +155,7 @@ const characters = [{
         gender: "female",
         img: "images/huohuo.png",
         desc: "Penakut tapi kuat.",
-        details: "Terkadang takut tapi selalu bangkit, setia, berani melindungi teman.",
+        details: "Huohuo adalah sosok yang terkadang penakut namun memiliki kekuatan batin yang luar biasa. Ia selalu bangkit dari ketakutannya dan berani melindungi teman-teman. Kesetiaannya yang tinggi membuatnya tidak pernah meninggalkan orang yang membutuhkan. Meskipun takut, ia belajar menghadapi rasa takutnya dan menjadi lebih kuat. Ia percaya bahwa keberanian sejati adalah ketika kita bisa bertindak meskipun takut.",
         words: "Meskipun takut, aku tidak akan mundur.",
         sound: "sounds/huohuo.mp3"
     },
@@ -165,7 +164,7 @@ const characters = [{
         gender: "male",
         img: "images/wriothesley.png",
         desc: "Badass, hangat, pemimpin.",
-        details: "Berani, memimpin dengan hati, hangat terhadap teman, penuh strategi.",
+        details: "Wriothesley adalah pemimpin yang badass namun hangat, selalu memimpin dengan hati dan strategi yang matang. Ia berani menghadapi tantangan namun juga peduli terhadap kesejahteraan timnya. Kekuatannya yang luar biasa membuatnya menjadi sosok yang dihormati, namun kehangatannya membuatnya mudah didekati. Ia selalu berusaha menciptakan keseimbangan antara kekuatan dan empati dalam kepemimpinannya.",
         words: "Ikuti aku, aku akan menuntunmu.",
         sound: "sounds/wriothesley.mp3"
     },
@@ -174,7 +173,7 @@ const characters = [{
         gender: "male",
         img: "images/neuvillette.png",
         desc: "Pendiam, tegas, megah.",
-        details: "Tenang, tegas, berwibawa, selalu menegakkan keadilan.",
+        details: "Neuvillette adalah sosok yang pendiam namun tegas dan megah, selalu menegakkan keadilan dengan prinsip yang kuat. Kewibawaannya membuat orang menghormatinya tanpa kata. Ia tenang dalam menghadapi situasi apapun dan selalu mempertimbangkan konsekuensi tindakannya. Kehormatannya yang tinggi membuatnya menjadi panutan bagi banyak orang, dan ia selalu berusaha menciptakan dunia yang lebih adil.",
         words: "Kehormatan adalah segalanya.",
         sound: "sounds/neuvillette.mp3"
     },
@@ -183,7 +182,7 @@ const characters = [{
         gender: "female",
         img: "images/shorekeeper.png",
         desc: "Pemimpin bijak dan kuat.",
-        details: "Bijaksana, kuat, melindungi dunia, selalu memikirkan masa depan.",
+        details: "Shorekeeper adalah pemimpin yang bijak dan kuat, selalu melindungi dunia dengan visi jangka panjang. Ia memikirkan masa depan dengan matang dan selalu berusaha menciptakan stabilitas. Kekuatannya yang luar biasa membuatnya mampu menghadapi ancaman besar, namun kebijaksanaannya membuat keputusannya selalu tepat. Ia percaya bahwa melindungi dunia adalah tanggung jawab yang harus diemban dengan penuh dedikasi.",
         words: "Aku akan menjaga pantai ini.",
         sound: "sounds/shorekeeper.mp3"
     },
@@ -192,7 +191,7 @@ const characters = [{
         gender: "female",
         img: "images/jane_doe.png",
         desc: "Misterius dan cerdas.",
-        details: "Rahasia, cerdas, selalu mencari kebenaran, penuh misteri.",
+        details: "Jane Doe adalah sosok yang sangat misterius dan cerdas, selalu mencari kebenaran di balik segala hal. Ia penuh rahasia namun memiliki kecerdasan yang luar biasa dalam menganalisis situasi. Misterinya membuat orang penasaran, namun ia selalu bertindak demi kebaikan. Ia percaya bahwa pengetahuan adalah kunci untuk memahami dunia, dan selalu berusaha mengungkap misteri-misteri yang ada.",
         words: "Siapa aku sebenarnya?",
         sound: "sounds/jane_doe.mp3"
     },
@@ -201,7 +200,7 @@ const characters = [{
         gender: "female",
         img: "images/kiana.png",
         desc: "Pemberani dan energik.",
-        details: "Berani, energik, melawan musuh, selalu melindungi teman.",
+        details: "Kiana adalah sosok yang pemberani dan energik, selalu melawan musuh dengan semangat yang tinggi. Energinya yang melimpah membuatnya selalu aktif dan tidak pernah menyerah. Ia selalu melindungi teman-teman dengan segala cara dan percaya bahwa keberanian adalah kunci untuk mengatasi segala tantangan. Optimismenya yang tinggi membuatnya selalu melihat peluang di tengah kesulitan.",
         words: "Aku tidak akan menyerah!",
         sound: "sounds/kiana.mp3"
     },
@@ -210,7 +209,7 @@ const characters = [{
         gender: "male",
         img: "images/dyroth_starlight.png",
         desc: "Pahlawan bintang yang strategis.",
-        details: "Strategis, kuat, memimpin pasukan, penuh keberanian.",
+        details: "Dyroth Starlight adalah pahlawan yang strategis dan kuat, selalu memimpin pasukan dengan taktik yang brilian. Keberaniannya yang luar biasa membuatnya menjadi inspirasi bagi banyak orang. Ia selalu memikirkan strategi jangka panjang dan berusaha menciptakan kemenangan yang berkelanjutan. Bintang yang memandu langkahnya membuatnya percaya bahwa takdir dapat diubah dengan usaha dan kecerdasan.",
         words: "Bintang akan memandu kita.",
         sound: "sounds/dyroth_starlight.mp3"
     },
@@ -219,7 +218,7 @@ const characters = [{
         gender: "female",
         img: "images/ye_shunguang.png",
         desc: "Cerah dan penuh harapan.",
-        details: "Optimis, ceria, membawa cahaya, selalu mendukung.",
+        details: "Ye Shunguang adalah sosok yang cerah dan penuh harapan, selalu membawa cahaya ke dalam kegelapan. Optimismenya yang tinggi membuatnya selalu melihat sisi positif dari segala hal. Ia ceria dan selalu mendukung orang lain untuk tetap bersemangat. Cahayanya yang bersinar membuatnya menjadi sumber inspirasi, dan ia percaya bahwa harapan dapat mengubah dunia menjadi tempat yang lebih baik.",
         words: "Mari kita lihat cahaya itu.",
         sound: "sounds/ye_shunguang.mp3"
     },
@@ -228,7 +227,7 @@ const characters = [{
         gender: "female",
         img: "images/astra_yao.png",
         desc: "Bijak dan visioner.",
-        details: "Visioner, bijaksana, melihat masa depan, penuh wawasan.",
+        details: "Astra Yao adalah sosok yang bijak dan visioner, selalu melihat masa depan dengan jelas dan penuh wawasan. Kebijaksanaannya membuatnya mampu memberikan nasihat yang tepat untuk orang lain. Ia visioner dalam merencanakan perubahan dan selalu berusaha menciptakan dunia yang lebih baik. Wawasannya yang luas membuatnya menjadi pemimpin yang dihormati, dan ia percaya bahwa masa depan ada di tangan mereka yang berani bermimpi.",
         words: "Masa depan ada di tangan kita.",
         sound: "sounds/astra_yao.mp3"
     },
@@ -237,7 +236,7 @@ const characters = [{
         gender: "female",
         img: "images/ciaccona.png",
         desc: "Elegan dan kuat.",
-        details: "Elegan, kuat, penuh gaya, selalu menari dalam pertarungan.",
+        details: "Ciaccona adalah sosok yang elegan dan kuat, selalu menari dalam pertarungan dengan gaya yang memukau. Kekuatannya yang luar biasa dipadukan dengan elegansi yang tinggi membuatnya unik. Ia penuh gaya dalam setiap gerakan dan selalu menikmati tantangan. Keindahannya tidak hanya fisik, namun juga dalam cara ia menghadapi hidup. Ia percaya bahwa kekuatan sejati datang dari harmoni antara tubuh dan jiwa.",
         words: "Mari kita berdansa.",
         sound: "sounds/ciaccona.mp3"
     },
@@ -246,7 +245,7 @@ const characters = [{
         gender: "male",
         img: "images/brant.png",
         desc: "Tangguh dan setia.",
-        details: "Tangguh, setia, melindungi, selalu berdiri teguh.",
+        details: "Brant adalah sosok yang sangat tangguh dan setia, selalu berdiri teguh melindungi orang-orang yang ia sayangi. Kekuatannya yang luar biasa membuatnya mampu menghadapi bahaya dengan tenang. Kesetiaannya tidak pernah goyah, dan ia selalu siap berkorban demi teman dan keluarga. Meskipun terlihat keras dari luar, ia memiliki hati yang hangat dan selalu berusaha menciptakan rasa aman bagi orang terdekatnya.",
         words: "Aku akan melindungimu.",
         sound: "sounds/brant.mp3"
     },
@@ -255,7 +254,7 @@ const characters = [{
         gender: "female",
         img: "images/raiden_shogun.png",
         desc: "Megah dan adil.",
-        details: "Megah, adil, memimpin dengan kekuatan, menegakkan hukum.",
+        details: "Raiden Shogun adalah sosok yang megah dan adil, selalu memimpin dengan kekuatan dan menegakkan hukum dengan tegas. Kewibawaannya membuat semua orang menghormatinya tanpa syarat. Ia adil dalam setiap keputusan dan selalu memikirkan kepentingan rakyatnya. Kekuatannya yang luar biasa dipadukan dengan kebijaksanaan yang tinggi membuatnya menjadi pemimpin yang sempurna, selalu berusaha menciptakan dunia yang lebih baik.",
         words: "Keadilan akan ditegakkan.",
         sound: "sounds/raiden_shogun.mp3"
     },
@@ -264,7 +263,7 @@ const characters = [{
         gender: "female",
         img: "images/skirk.png",
         desc: "Lincah dan cerdas.",
-        details: "Lincah, cerdas, selalu menemukan jalan, penuh trik.",
+        details: "Skirk adalah sosok yang lincah dan cerdas, selalu menemukan jalan keluar dari situasi yang paling sulit. Kecerdasannya yang tinggi membuatnya penuh trik dan selalu selangkah di depan orang lain. Ia cepat beradaptasi dan selalu berpikir kreatif dalam menghadapi masalah. Meskipun terlihat nakal, ia selalu menggunakan kecerdasannya untuk kebaikan dan membantu teman-teman dengan cara yang unik.",
         words: "Aku tahu rahasianya.",
         sound: "sounds/skirk.mp3"
     },
@@ -273,7 +272,7 @@ const characters = [{
         gender: "female",
         img: "images/tribbie.png",
         desc: "Enerjik dan lucu.",
-        details: "Enerjik, lucu, membawa kegembiraan, selalu aktif.",
+        details: "Tribbie adalah sosok yang energik dan lucu, selalu membawa kegembiraan ke mana pun ia pergi. Energinya yang melimpah membuatnya selalu aktif dan penuh semangat. Kelucuannya yang alami membuat orang di sekitarnya selalu tertawa dan merasa bahagia. Ia percaya bahwa hidup harus dijalani dengan penuh keceriaan, dan selalu berusaha membuat hari orang lain lebih menyenangkan dengan kehadirannya yang riang.",
         words: "Yey, seru!",
         sound: "sounds/tribbie.mp3"
     },
@@ -282,7 +281,7 @@ const characters = [{
         gender: "female",
         img: "images/arlechinno.png",
         desc: "Misterius dan dramatis.",
-        details: "Misterius, dramatis, penuh teka-teki, selalu mengejutkan.",
+        details: "Arlechinno adalah sosok yang misterius dan dramatis, selalu penuh teka-teki dan kejutan. Dramatisasinya yang tinggi membuat setiap tindakannya terlihat seperti pertunjukan. Misterinya membuat orang penasaran dan selalu ingin tahu lebih banyak tentangnya. Ia suka bermain dengan ekspektasi orang lain dan selalu mengejutkan dengan kejutan-kejutannya. Meskipun terlihat aneh, ia memiliki kreativitas yang luar biasa.",
         words: "Mari kita main teka-teki.",
         sound: "sounds/arlechinno.mp3"
     },
@@ -291,7 +290,7 @@ const characters = [{
         gender: "female",
         img: "images/the_herta.png",
         desc: "Genius dan eksentrik.",
-        details: "Genius, eksentrik, menciptakan hal-hal luar biasa, penuh ide.",
+        details: "The Herta adalah sosok yang genius dan eksentrik, selalu menciptakan hal-hal luar biasa dengan ide-idenya yang brilian. Eksentrisitasnya membuatnya unik dan tidak pernah membosankan. Kegeniusannya dalam sains dan teknologi membuatnya mampu menciptakan inovasi yang mengubah dunia. Ia selalu penuh ide dan tidak pernah berhenti bereksperimen. Meskipun terlihat aneh, kontribusinya terhadap pengetahuan manusia sangat besar.",
         words: "Sains adalah jawabannya.",
         sound: "sounds/the_herta.mp3"
     },
@@ -300,7 +299,7 @@ const characters = [{
         gender: "female",
         img: "images/ruanmei.png",
         desc: "Tenang dan analitis.",
-        details: "Tenang, analitis, mempelajari segalanya, selalu objektif.",
+        details: "Ruanmei adalah sosok yang tenang dan analitis, selalu mempelajari segala hal dengan objektivitas yang tinggi. Ketenangannya membuatnya mampu melihat situasi dari berbagai sudut pandang. Analisisnya yang mendalam membuatnya selalu memberikan solusi yang tepat. Ia percaya bahwa pemahaman yang mendalam adalah kunci untuk menyelesaikan masalah, dan selalu berusaha mencari kebenaran di balik setiap fenomena.",
         words: "Mari kita analisis.",
         sound: "sounds/ruanmei.mp3"
     },
@@ -309,7 +308,7 @@ const characters = [{
         gender: "female",
         img: "images/evernight.png",
         desc: "Gelap dan kuat.",
-        details: "Gelap, kuat, menghadapi malam, penuh misteri.",
+        details: "Evernight adalah sosok yang gelap dan kuat, selalu menghadapi malam dengan keberanian yang luar biasa. Kekuatannya yang misterius membuatnya mampu bertahan dalam kegelapan. Ia belajar dari bayangan dan menggunakan pengalaman gelapnya untuk menjadi lebih kuat. Meskipun terlihat menakutkan, ia memiliki kedalaman emosi yang kompleks dan selalu berusaha mencari cahaya di tengah kegelapan.",
         words: "Malam adalah sekutu ku.",
         sound: "sounds/evernight.mp3"
     },
@@ -318,7 +317,7 @@ const characters = [{
         gender: "male",
         img: "images/danheng.png",
         desc: "Pendiam dan kuat.",
-        details: "Pendiam, kuat, melindungi, selalu waspada.",
+        details: "Danheng adalah sosok yang pendiam dan kuat, selalu melindungi orang lain dengan diam-diam. Kewaspadaannya yang tinggi membuatnya selalu siap menghadapi bahaya. Kekuatannya yang luar biasa dipadukan dengan sikap yang tenang membuatnya menjadi pelindung yang andal. Ia percaya bahwa tindakan lebih penting daripada kata-kata, dan selalu bertindak demi kebaikan tanpa mengharapkan pengakuan.",
         words: "Aku akan menjaga.",
         sound: "sounds/danheng.mp3"
     },
@@ -327,7 +326,7 @@ const characters = [{
         gender: "female",
         img: "images/march.png",
         desc: "Ceria dan fotografer.",
-        details: "Ceria, fotografer, mengabadikan momen, selalu positif.",
+        details: "March adalah sosok yang ceria dan berbakat sebagai fotografer, selalu mengabadikan momen-momen indah dalam hidup. Optimismenya yang tinggi membuatnya selalu positif dalam menghadapi segala hal. Keceriaannya menular dan membuat orang di sekitarnya merasa bahagia. Ia percaya bahwa setiap momen berharga dan harus diabadikan, dan selalu berusaha melihat keindahan dalam kehidupan sehari-hari.",
         words: "Klik! Bagus!",
         sound: "sounds/march.mp3"
     },
@@ -336,7 +335,7 @@ const characters = [{
         gender: "female",
         img: "images/aglaea.png",
         desc: "Anggun dan bijak.",
-        details: "Anggun, bijak, membawa keindahan, selalu elegan.",
+        details: "Aglaea adalah sosok yang anggun dan bijak, selalu membawa keindahan dan kedamaian ke mana pun ia pergi. Kebijaksanaannya membuatnya mampu memberikan nasihat yang tepat dan bijaksana. Elegansinya yang alami membuatnya terlihat anggun dalam setiap gerakan. Ia percaya bahwa keindahan sejati datang dari dalam, dan selalu berusaha menciptakan harmoni di sekitarnya dengan sikapnya yang lembut namun tegas.",
         words: "Keindahan ada di mana-mana.",
         sound: "sounds/aglaea.mp3"
     },
@@ -345,7 +344,7 @@ const characters = [{
         gender: "female",
         img: "images/firefly.png",
         desc: "Bersinar dan pemberani.",
-        details: "Bersinar, pemberani, menerangi kegelapan, selalu berani.",
+        details: "Firefly adalah sosok yang bersinar dan pemberani, selalu menerangi kegelapan dengan keberaniannya yang luar biasa. Cahayanya yang bersinar membuatnya menjadi sumber inspirasi bagi orang lain. Keberaniannya membuatnya tidak takut menghadapi tantangan, bahkan dalam situasi yang paling gelap sekalipun. Ia percaya bahwa setiap orang memiliki cahaya dalam dirinya, dan selalu berusaha membantu orang lain menemukan cahaya tersebut.",
         words: "Aku akan bersinar.",
         sound: "sounds/firefly.mp3"
     },
@@ -354,8 +353,9 @@ const characters = [{
         gender: "female",
         img: "images/fugue.png",
         desc: "Misterius dan harmonis.",
-        details: "Misterius, harmonis, menciptakan musik, penuh melodi.",
+        details: "Fugue adalah sosok yang misterius dan harmonis, selalu menciptakan musik yang indah dan penuh melodi. Misterinya membuatnya terlihat enigmatic namun menarik. Harmoninya yang tinggi membuatnya mampu menciptakan keseimbangan dalam segala hal. Ia percaya bahwa musik adalah bahasa universal, dan selalu berusaha menyampaikan perasaan melalui nada-nada yang indah. Kedalaman emosinya tercermin dalam setiap komposisi yang ia buat.",
         words: "Mari dengarkan musiknya.",
+
         sound: "sounds/fugue.mp3"
     }
 ];
@@ -403,67 +403,148 @@ const characterTraits = {
     "Fugue": { smart: 2, gentle: 2 }
 };
 
-let nameMapping = {
+nameMapping = {
     "rara": "Phainon",
     "kirana": "Wriothesley",
-    "galang": "hina",
+    "galang": "Hina",
     "radja": "Yae Miko",
     "bryan": "Clorinde",
     "bryann": "Robin"
 };
 
 const quizQuestions = [{
-        question: "Ketika ada masalah, kamu cenderung...",
+        question: "Ketika ada masalah besar, kamu cenderung...",
         answers: [
-            { text: "Langsung hadapi, jangan takut", traits: { brave: 2, leader: 1 } },
-            { text: "Pikir matang-matang dulu", traits: { smart: 2, cautious: 1 } },
-            { text: "Cari solusi yang baik untuk semua", traits: { warm: 2, leader: 1 } },
-            { text: "Minta bantuan orang terpercaya", traits: { gentle: 2, cautious: 1 } }
+            { text: "Menghadapinya dengan berani", traits: { brave: 2 } },
+            { text: "Berpikir strategis dulu", traits: { smart: 2 } },
+            { text: "Mencari bantuan teman", traits: { warm: 2 } },
+            { text: "Menunggu dan melihat situasi", traits: { cautious: 2 } }
         ]
     },
     {
-        question: "Sifat terbaik kamu adalah...",
+        question: "Dalam kelompok, peran kamu biasanya...",
         answers: [
-            { text: "Kuat dan tangguh", traits: { brave: 3 } },
-            { text: "Cerdas dan strategis", traits: { smart: 3 } },
-            { text: "Penyayang dan perhatian", traits: { gentle: 3 } },
-            { text: "Tegas dan bisa memimpin", traits: { leader: 3 } }
+            { text: "Memimpin dan mengarahkan", traits: { leader: 2 } },
+            { text: "Menyediakan dukungan emosional", traits: { warm: 2 } },
+            { text: "Menganalisis dan memberikan saran", traits: { smart: 2 } },
+            { text: "Mengikuti arahan dengan hati-hati", traits: { cautious: 2 } }
         ]
     },
     {
-        question: "Dalam kelompok, kamu lebih suka...",
+        question: "Ketika bertengkar, kamu biasanya...",
         answers: [
-            { text: "Jadi pemimpin", traits: { leader: 3, brave: 1 } },
-            { text: "Jadi pendukung teman", traits: { gentle: 2, warm: 2 } },
-            { text: "Berpikir solusi terbaik", traits: { smart: 2, cautious: 1 } },
-            { text: "Jadi yang paling berani", traits: { brave: 3 } }
+            { text: "Berargumen dengan penuh semangat", traits: { brave: 2 } },
+            { text: "Menggunakan logika dan fakta", traits: { smart: 2 } },
+            { text: "Mencoba menenangkan situasi", traits: { gentle: 2 } },
+            { text: "Menghindari konfrontasi", traits: { cautious: 2 } }
         ]
     },
     {
-        question: "Ketika ada teman sedih, kamu...",
+        question: "Dalam perjalanan, kamu lebih suka...",
         answers: [
-            { text: "Dengarkan dan beri dukungan", traits: { gentle: 3, warm: 2 } },
-            { text: "Bantu cari solusi terbaik", traits: { smart: 2, leader: 1 } },
-            { text: "Ajak melakukan sesuatu seru", traits: { warm: 2, brave: 1 } },
-            { text: "Ada untuk mereka kapan saja", traits: { gentle: 2, warm: 2 } }
+            { text: "Petualangan yang menantang", traits: { brave: 2 } },
+            { text: "Rencana yang terorganisir", traits: { smart: 2 } },
+            { text: "Tempat yang nyaman dan hangat", traits: { warm: 2 } },
+            { text: "Destinasi yang aman dan familiar", traits: { cautious: 2 } }
         ]
     },
     {
-        question: "Hal yang paling ditakuti adalah...",
+        question: "Ketika belajar hal baru, kamu...",
         answers: [
-            { text: "Tidak berguna bagi orang lain", traits: { warm: 2, gentle: 1 } },
-            { text: "Kalah atau mengecewakan", traits: { brave: 2, leader: 1 } },
-            { text: "Ambil keputusan salah", traits: { cautious: 3 } },
-            { text: "Tidak memahami sesuatu", traits: { smart: 2 } }
+            { text: "Langsung mencoba dan belajar dari kesalahan", traits: { brave: 2 } },
+            { text: "Membaca dan memahami teori dulu", traits: { smart: 2 } },
+            { text: "Belajar bersama teman", traits: { warm: 2 } },
+            { text: "Mengikuti instruksi step-by-step", traits: { cautious: 2 } }
         ]
     },
     {
-        question: "Impianmu yang terbesar adalah...",
+        question: "Dalam hubungan, kamu lebih suka...",
         answers: [
-            { text: "Menjadi yang terbaik/terkuat", traits: { brave: 3, leader: 1 } },
-            { text: "Membuat orang bahagia", traits: { warm: 3, gentle: 1 } },
-            { text: "Menemukan kebenaran/ilmu", traits: { smart: 3 } },
-            { text: "Melindungi orang terkasih", traits: { brave: 2, gentle: 2 } }
+            { text: "Pasangan yang kuat dan protektif", traits: { brave: 2 } },
+            { text: "Pasangan yang cerdas dan intelektual", traits: { smart: 2 } },
+            { text: "Pasangan yang lembut dan perhatian", traits: { gentle: 2 } },
+            { text: "Pasangan yang stabil dan dapat diandalkan", traits: { cautious: 2 } }
+        ]
+    },
+    {
+        question: "Ketika stres, kamu biasanya...",
+        answers: [
+            { text: "Menghadapi dan menyelesaikan masalah", traits: { brave: 2 } },
+            { text: "Menganalisis penyebabnya", traits: { smart: 2 } },
+            { text: "Berbicara dengan orang terdekat", traits: { warm: 2 } },
+            { text: "Mengambil waktu untuk tenang", traits: { cautious: 2 } }
+        ]
+    },
+    {
+        question: "Dalam keputusan penting, kamu...",
+        answers: [
+            { text: "Mengambil risiko untuk hasil besar", traits: { brave: 2 } },
+            { text: "Menimbang pro dan kontra dengan hati-hati", traits: { smart: 2 } },
+            { text: "Mendengarkan pendapat orang lain", traits: { warm: 2 } },
+            { text: "Memilih opsi yang paling aman", traits: { cautious: 2 } }
+        ]
+    },
+    {
+        question: "Kepribadian kamu lebih mirip...",
+        answers: [
+            { text: "Pahlawan yang berani", traits: { brave: 2 } },
+            { text: "Pemikir yang bijak", traits: { smart: 2 } },
+            { text: "Sahabat yang hangat", traits: { warm: 2 } },
+            { text: "Orang yang bijaksana dan tenang", traits: { cautious: 2 } }
+        ]
+    },
+    {
+        question: "Dalam situasi darurat, kamu...",
+        answers: [
+            { text: "Langsung bertindak heroik", traits: { brave: 2 } },
+            { text: "Mencari solusi kreatif", traits: { smart: 2 } },
+            { text: "Membantu orang lain terlebih dahulu", traits: { warm: 2 } },
+            { text: "Memastikan keselamatan diri dulu", traits: { cautious: 2 } }
+        ]
+    },
+    {
+        question: "Gaya komunikasi kamu...",
+        answers: [
+            { text: "Langsung dan tegas", traits: { brave: 2 } },
+            { text: "Logis dan persuasif", traits: { smart: 2 } },
+            { text: "Empati dan mendengarkan", traits: { gentle: 2 } },
+            { text: "Hati-hati dan diplomatis", traits: { cautious: 2 } }
+        ]
+    },
+    {
+        question: "Ketika melihat ketidakadilan, kamu...",
+        answers: [
+            { text: "Langsung melawan", traits: { brave: 2 } },
+            { text: "Mencari cara untuk memperbaiki", traits: { smart: 2 } },
+            { text: "Mendukung korban", traits: { warm: 2 } },
+            { text: "Melaporkan dengan aman", traits: { cautious: 2 } }
+        ]
+    },
+    {
+        question: "Hobi kamu lebih ke...",
+        answers: [
+            { text: "Olahraga ekstrem", traits: { brave: 2 } },
+            { text: "Membaca atau puzzle", traits: { smart: 2 } },
+            { text: "Bersosialisasi", traits: { warm: 2 } },
+            { text: "Kegiatan rumah yang tenang", traits: { cautious: 2 } }
+        ]
+    },
+    {
+        question: "Dalam tim, kamu lebih suka...",
+        answers: [
+            { text: "Menjadi pemimpin", traits: { leader: 2 } },
+            { text: "Menyediakan ide-ide", traits: { smart: 2 } },
+            { text: "Membuat suasana harmonis", traits: { warm: 2 } },
+            { text: "Melakukan tugas dengan teliti", traits: { cautious: 2 } }
+        ]
+    },
+    {
+        question: "Cita-cita kamu...",
+        answers: [
+            { text: "Menjadi pahlawan atau pemimpin", traits: { brave: 2 } },
+            { text: "Menjadi ahli di bidang tertentu", traits: { smart: 2 } },
+            { text: "Membantu orang lain", traits: { warm: 2 } },
+            { text: "Mencapai stabilitas dan keamanan", traits: { cautious: 2 } }
         ]
     }
 ];
@@ -521,7 +602,7 @@ function displayBrowseCharacters() {
                     <button class="char-item-btn" onclick="viewCharacter('${char.name}')">Lihat Detail</button>
                 </div>
             </div>
-        `;
+    `;
     });
 }
 
@@ -555,7 +636,7 @@ function filterCharacters() {
                         <button class="char-item-btn" onclick="viewCharacter('${char.name}')">Lihat Detail</button>
                     </div>
                 </div>
-            `;
+        `;
         }
     });
 }
@@ -575,8 +656,8 @@ function viewCharacter(name) {
                 <div class="char-info">
                     <h1>${char.name}</h1>
                     <p><strong>Gender:</strong> ${char.gender === "male" ? "Laki-laki" : char.gender === "anomali" ? "Anomali" : "Perempuan"}</p>
-                    <p><strong>Deskripsi:</strong> ${char.desc}</p>
-                    <p><strong>Ciri-ciri:</strong> ${char.details}</p>
+                    <p><strong>Ciri-ciri:</strong> ${char.desc}</p>
+                    <p><strong>Deskripsi:</strong> ${char.details}</p>
                     <p><strong>Trait:</strong> ${traitText}</p>
                 </div>
             </div>
@@ -675,102 +756,102 @@ function nextQuestion() {
     } else {
         startGachaAnimation();
     }
-}
 
-function previousQuestion() {
-    if (currentQuestion > 0) {
-        currentQuestion--;
-        selectedAnswerIdx = -1;
-        displayQuestion();
-    }
-}
-
-function startGachaAnimation() {
-    // Play gacha spin sound
-    new Audio('gacha.mp3').play();
-
-    document.getElementById("quiz").classList.add("hidden");
-    document.getElementById("gachaAnim").classList.remove("hidden");
-
-    // Animate gacha text
-    const gachaText = document.getElementById("gachaText");
-    const messages = [
-        "Sedang mencari karakter terbaik...",
-        "Menganalisis kepribadianmu...",
-        "Memproses data...",
-        "Hampir selesai...",
-        "Siap-siap melihat hasilnya!"
-    ];
-
-    let messageIndex = 0;
-    const textInterval = setInterval(() => {
-        gachaText.textContent = messages[messageIndex];
-        messageIndex = (messageIndex + 1) % messages.length;
-    }, 400);
-
-    setTimeout(() => {
-        clearInterval(textInterval);
-        rollCharacter(username);
-    }, 2000);
-}
-
-function rollCharacter(username) {
-    const result = document.getElementById("result");
-    const gacha = document.getElementById("gachaAnim");
-
-    let char = findBestCharacter();
-
-    document.body.style.backgroundImage = char.gender === "male" ?
-        'url("images/sunset.jpg")' :
-        char.gender === "anomali" ? 'url("images/black.jpg")' :
-        'url("images/taman_bunga.jpg")';
-
-    if (char.gender === "anomali") {
-        const anomalyAudio = new Audio("sounds/anomali.mp3");
-        anomalyAudio.addEventListener('ended', () => {
-            new Audio(char.sound).play();
-        });
-        anomalyAudio.play();
-    } else {
-        new Audio(char.sound).play();
+    function previousQuestion() {
+        if (currentQuestion > 0) {
+            currentQuestion--;
+            selectedAnswerIdx = -1;
+            displayQuestion();
+        }
     }
 
-    // Play backsound for Robin
-    if (char.name === "Robin") {
-        const robinBacksound = new Audio("sounds/robin_sound.mp3");
-        robinBacksound.play();
-    }
+    function startGachaAnimation() {
+        // Play gacha spin sound
+        new Audio('gacha.mp3').play();
 
-    // Play backsound for Astra Yao
-    if (char.name === "Astra Yao") {
-        const astraYaoBacksound = new Audio("sounds/astra_yao_sound.mp3");
-        astraYaoBacksound.play();
-    }
+        document.getElementById("quiz").classList.add("hidden");
+        document.getElementById("gachaAnim").classList.remove("hidden");
 
+        // Animate gacha text
+        const gachaText = document.getElementById("gachaText");
+        const messages = [
+            "Sedang mencari karakter terbaik...",
+            "Menganalisis kepribadianmu...",
+            "Memproses data...",
+            "Hampir selesai...",
+            "Siap-siap melihat hasilnya!"
+        ];
 
-    createParticles(char.gender);
-    animateParticles();
+        let messageIndex = 0;
+        let textInterval = setInterval(() => {
+            gachaText.textContent = messages[messageIndex];
+            messageIndex = (messageIndex + 1) % messages.length;
+        }, 400);
 
-    // Gimmick untuk karakter anomali
-    if (char.gender === "anomali") {
-        // Shake effect
-        document.body.classList.add("shake");
         setTimeout(() => {
-            document.body.classList.remove("shake");
-        }, 500);
-
-        // Show error message
-        const errorMsg = document.getElementById("errorMessage");
-        errorMsg.style.display = "block";
-        setTimeout(() => {
-            errorMsg.style.display = "none";
+            clearInterval(textInterval);
+            rollCharacter(username);
         }, 2000);
     }
 
-    gacha.classList.add("hidden");
-    result.classList.remove("hidden");
+    function rollCharacter(username) {
+        const result = document.getElementById("result");
+        const gacha = document.getElementById("gachaAnim");
 
-    result.innerHTML = `
+        let resultObj = findBestCharacter();
+        let char = resultObj.character;
+
+        document.body.style.backgroundImage = char.gender === "male" ?
+            'url("images/sunset.jpg")' :
+            char.gender === "anomali" ? 'url("images/black.jpg")' :
+            'url("images/taman_bunga.jpg")';
+
+        if (char.gender === "anomali") {
+            const anomalyAudio = new Audio("sounds/anomali.mp3");
+            anomalyAudio.addEventListener('ended', () => {
+                anomalyAudio.addEventListener('ended', () => {});
+                anomalyAudio.play();
+            });
+        } else {
+            new Audio(char.sound).play();
+        }
+
+        // Play backsound for Robin
+        if (char.name === "Robin") {
+            const robinBacksound = new Audio("sounds/robin_sound.mp3");
+            robinBacksound.play();
+        }
+
+        // Play backsound for Astra Yao
+        if (char.name === "Astra Yao") {
+            const astraYaoBacksound = new Audio("sounds/astra_yao_sound.mp3");
+            astraYaoBacksound.play();
+        }
+
+
+        createParticles(char.gender);
+        animateParticles();
+
+        // Gimmick untuk karakter anomali
+        if (char.gender === "anomali") {
+            // Shake effect
+            document.body.classList.add("shake");
+            setTimeout(() => {
+                document.body.classList.remove("shake");
+            }, 500);
+
+            // Show error message
+            const errorMsg = document.getElementById("errorMessage");
+            errorMsg.style.display = "block";
+            setTimeout(() => {
+                errorMsg.style.display = "none";
+            }, 2000);
+        }
+
+        gacha.classList.add("hidden");
+        result.classList.remove("hidden");
+
+        result.innerHTML = `
         <h2>Hai, ${username}!</h2>
         <div class="char-card fadeIn">
             <div class="char-card-top">
@@ -779,6 +860,7 @@ function rollCharacter(username) {
                     <h1>${char.name}</h1>
                     <p id="desc" style="opacity:0;"><strong>Deskripsi:</strong> ${char.desc}</p>
                     <p id="traits" style="opacity:0;"><strong>Ciri-ciri:</strong> ${char.details}</p>
+                    <p id="percentages" style="opacity:0;"><strong>${gachaMode === "personality" ? `Wow, kamu mirip dengan ${char.name} ${resultObj.similarity}%!` : `Wow, kamu cocok dengan ${char.name} ${resultObj.compatibility}%!`}</strong></p>
                 </div>
             </div>
             <div class="char-card-bottom">
@@ -789,83 +871,94 @@ function rollCharacter(username) {
         <button onclick="location.reload()">Coba Lagi</button>
     `;
 
-    const soundEffect = new Audio("sounds/pop.mp3");
-    setTimeout(() => {
-        document.getElementById("desc").style.opacity = 1;
-        soundEffect.play();
-    }, 500);
-    setTimeout(() => {
-        document.getElementById("traits").style.opacity = 1;
-        soundEffect.play();
-    }, 1000);
-    setTimeout(() => {
-        document.getElementById("words").style.opacity = 1;
-        soundEffect.play();
-    }, 1500);
-}
-
-function findBestCharacter() {
-    // Check if username is mapped to a specific character
-    const lowerUsername = username.toLowerCase();
-    if (nameMapping[lowerUsername]) {
-        const mappedCharName = nameMapping[lowerUsername];
-        const mappedChar = characters.find(char => char.name === mappedCharName);
-        if (mappedChar) {
-            return mappedChar;
-        }
+        const soundEffect = new Audio("sounds/pop.mp3");
+        setTimeout(() => {
+            document.getElementById("desc").style.opacity = 1;
+            soundEffect.play();
+        }, 500);
+        setTimeout(() => {
+            document.getElementById("traits").style.opacity = 1;
+            soundEffect.play();
+        }, 1000);
+        setTimeout(() => {
+            document.getElementById("percentages").style.opacity = 1;
+            soundEffect.play();
+        }, 1500);
+        setTimeout(() => {
+            document.getElementById("words").style.opacity = 1;
+            soundEffect.play();
+        }, 2000);
     }
 
-    let bestMatch = characters[0];
-    let bestScore = -Infinity;
-
-    if (gachaMode === "personality") {
-        // MODE PERSONALITY: Cocokkan trait yang sama
-        characters.forEach(char => {
-            let score = 0;
-            const traits = characterTraits[char.name];
-
-            Object.keys(traits).forEach(trait => {
-                score += traits[trait] * (userProfile[trait] || 0);
-            });
-
-            score += Math.random() * 5;
-
-            if (score > bestScore) {
-                bestScore = score;
-                bestMatch = char;
+    function findBestCharacter() {
+        // Check if username is mapped to a specific character
+        const lowerUsername = username.toLowerCase();
+        if (nameMapping[lowerUsername]) {
+            const mappedCharName = nameMapping[lowerUsername];
+            const mappedChar = characters.find(char => char.name === mappedCharName);
+            if (mappedChar) {
+                return { character: mappedChar, similarity: 100, compatibility: 100 };
             }
-        });
-    } else if (gachaMode === "compatibility") {
-        // MODE COMPATIBILITY: Cari yang komplementer (berlawanan/seimbang)
-        characters.forEach(char => {
-            let score = 0;
-            const traits = characterTraits[char.name];
+        }
 
-            // Hitung skor berdasarkan keseimbangan trait
+        let bestMatch = characters[0];
+        let bestSimilarityScore = -Infinity;
+        let bestCompatibilityScore = -Infinity;
+        let bestSimilarityPerc = 0;
+        let bestCompatibilityPerc = 0;
+
+        characters.forEach(char => {
+            const traits = characterTraits[char.name] || {};
+
+            // Calculate similarity score (personality match)
+            let similarityScore = 0;
+            Object.keys(traits).forEach(trait => {
+                similarityScore += traits[trait] * (userProfile[trait] || 0);
+            });
+            const similarityPerc = (similarityScore / 540) * 100; // Max score 540
+
+            // Calculate compatibility score (complementary traits)
+            let compatibilityScore = 0;
             Object.keys(traits).forEach(trait => {
                 const charTrait = traits[trait] || 0;
-                const userTrait = userProfile[trait] || 0;
-
-                // Karakter yang punya trait seimbang lebih baik
-                // Contoh: user brave tinggi, cari yang gentle/cautious
-                const difference = Math.abs(charTrait - userTrait);
+                const scaledUserTrait = (userProfile[trait] || 0) / 10; // Scale to 0-3 range
+                const difference = Math.abs(charTrait - scaledUserTrait);
                 if (difference >= 1) {
-                    score += (3 - difference) * 2; // Prefer sedikit berbeda
+                    compatibilityScore += (3 - difference) * 2;
                 } else if (difference === 0) {
-                    score += 1; // Neutral
+                    compatibilityScore += 1;
                 }
             });
+            const compatibilityPerc = (compatibilityScore / 24) * 100; // Max score 24
 
-            score += Math.random() * 5;
+            // Add randomness
+            similarityScore += Math.random() * 5;
+            compatibilityScore += Math.random() * 5;
 
-            if (score > bestScore) {
-                bestScore = score;
-                bestMatch = char;
+            // Determine best match based on mode
+            if (gachaMode === "personality") {
+                if (similarityScore > bestSimilarityScore) {
+                    bestSimilarityScore = similarityScore;
+                    bestMatch = char;
+                    bestSimilarityPerc = similarityPerc;
+                    bestCompatibilityPerc = compatibilityPerc;
+                }
+            } else if (gachaMode === "compatibility") {
+                if (compatibilityScore > bestCompatibilityScore) {
+                    bestCompatibilityScore = compatibilityScore;
+                    bestMatch = char;
+                    bestSimilarityPerc = similarityPerc;
+                    bestCompatibilityPerc = compatibilityPerc;
+                }
             }
         });
-    }
 
-    return bestMatch;
+        return {
+            character: bestMatch,
+            similarity: Math.round(bestSimilarityPerc),
+            compatibility: Math.round(bestCompatibilityPerc)
+        };
+    }
 }
 
 function createParticles(gender) {
@@ -964,14 +1057,9 @@ function refreshNameMappingList() {
                     <button class="mapping-item-btn" onclick="deleteNameMapping('${name}')">Hapus</button>
                 </div>
             </div>
-        `;
+    `;
     });
 }
-
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-});
 
 // ===== FUNGSI ADMIN PANEL =====
 function loadCharactersFromStorage() {
@@ -1165,7 +1253,7 @@ function refreshCharacterList() {
                     <button class="char-item-btn ${isCustom ? "" : "disabled"}" onclick="deleteCharacter('${char.name}')" ${!isCustom ? "disabled" : ""}>Hapus Karakter</button>
                 </div>
             </div>
-        `;
+    `;
     });
 }
 
