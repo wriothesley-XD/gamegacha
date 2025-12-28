@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Nama Karakter",
+    "gender": "male/female/anomali",
+    "img": "images/nama_file.png",
+    "desc": "Deskripsi singkat karakter",
+    "details": "Deskripsi lengkap karakter yang menjelaskan kepribadian dan latar belakangnya secara detail.",
+    "words": "Kata-kata khas karakter",
+    "sound": "sounds/nama_file.mp3",
+    "traits": {
+      "brave": 0,
+      "smart": 0,
+      "gentle": 0,
+      "leader": 0,
+      "warm": 0,
+      "cautious": 0
+    }
+  },
+  {
+    "name": "Contoh Karakter 1",
+    "gender": "male",
+    "img": "images/contoh1.png",
+    "desc": "Pejuang tangguh",
+    "details": "Karakter yang sangat kuat dan selalu melindungi teman-temannya.",
+    "words": "Aku akan melindungimu!",
+    "sound": "sounds/contoh1.mp3",
+    "traits": {
+      "brave": 3,
+      "smart": 1,
+      "gentle": 0,
+      "leader": 2,
+      "warm": 1,
+      "cautious": 0
+    }
+  },
+  {
+    "name": "Contoh Karakter 2",
+    "gender": "female",
+    "img": "images/contoh2.png",
+    "desc": "Cewe pintar dan lembut",
+    "details": "Karakter yang sangat cerdas dan selalu membantu orang lain dengan penuh kasih sayang.",
+    "words": "Ayo kita belajar bersama!",
+    "sound": "sounds/contoh2.mp3",
+    "traits": {
+      "brave": 0,
+      "smart": 3,
+      "gentle": 2,
+      "leader": 0,
+      "warm": 2,
+      "cautious": 1
+    }
+  }
+]

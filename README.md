@@ -1,5 +1,1 @@
-﻿# gamegacha
-# liivo paling keren abis
-# persetan pak tuo
-
-
+﻿

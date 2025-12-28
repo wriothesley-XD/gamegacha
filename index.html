@@ -11,37 +11,43 @@
 <body>
 
     <!-- PARTIKEL -->
-    <canvas id="particleCanvas"></canvas>
+    <canvas id="particleCanvas" aria-hidden="true"></canvas>
 
     <!-- HALAMAN AWAL -->
-    <div class="container fadeIn" id="home">
+    <div class="container fadeIn" id="home" role="main">
         <h1>Masukkan Nama Kamu</h1>
-        <input type="text" id="username" placeholder="Nama kamu..." />
+        <label for="username" class="sr-only">Nama kamu</label>
+        <input type="text" id="username" placeholder="Nama kamu..." aria-label="Masukkan nama kamu" />
         <div class="gacha-buttons">
-            <button onclick="startQuiz('personality')">🔍 Kamu Mirip Siapa?</button>
-            <button onclick="startQuiz('compatibility')">💕 Pasangan Mu?</button>
+            <button onclick="startQuiz('personality')" aria-label="Mulai kuis kepribadian untuk menemukan karakter mirip">🔍 Kamu Mirip Siapa?</button>
+            <button onclick="startQuiz('compatibility')" aria-label="Mulai kuis kompatibilitas untuk menemukan pasangan">💕 Pasangan Mu?</button>
+            <button onclick="startRandomGacha()" aria-label="Mulai gacha acak tanpa kuis">🎲 Gacha Acak</button>
         </div>
         <div class="home-buttons">
-            <button onclick="openBrowse()" class="home-btn">📚 Jelajahi Karakter</button>
-            <button onclick="openTutorial()" class="home-btn">❓ Bantuan</button>
+            <button onclick="openBrowse()" class="home-btn" aria-label="Buka panel jelajahi karakter">📚 Jelajahi Karakter</button>
+            <button onclick="openTutorial()" class="home-btn" aria-label="Buka panduan tutorial">❓ Bantuan</button>
         </div>
-        <button id="adminBtn" class="admin-btn">⚙️ Kelola Karakter</button>
+        <button id="adminBtn" class="admin-btn" aria-label="Buka panel admin untuk mengelola karakter">⚙️ Kelola Karakter</button>
+        <button id="importBtn" class="admin-btn" aria-label="Buka panel import/export karakter" style="margin-top: 10px;">📁 Import/Export JSON</button>
     </div>
 
     <!-- PANEL BROWSE KARAKTER -->
-    <div id="browsePanel" class="container hidden fadeIn">
+    <div id="browsePanel" class="container hidden fadeIn" role="main">
         <h1>Jelajahi Karakter</h1>
         <div class="admin-content">
             <div class="form-section">
                 <h3>Cari & Filter</h3>
-                <input type="text" id="searchName" placeholder="Cari nama karakter..." oninput="filterCharacters()" />
-                <select id="filterGender" onchange="filterCharacters()">
+                <label for="searchName" class="sr-only">Cari nama karakter</label>
+                <input type="text" id="searchName" placeholder="Cari nama karakter..." oninput="filterCharacters()" aria-label="Cari nama karakter" />
+                <label for="filterGender" class="sr-only">Filter berdasarkan gender</label>
+                <select id="filterGender" onchange="filterCharacters()" aria-label="Filter berdasarkan gender">
                     <option value="">Semua Gender</option>
                     <option value="male">Laki-laki</option>
                     <option value="female">Perempuan</option>
                     <option value="anomali">Anomali</option>
                 </select>
-                <select id="filterTrait" onchange="filterCharacters()">
+                <label for="filterTrait" class="sr-only">Filter berdasarkan trait</label>
+                <select id="filterTrait" onchange="filterCharacters()" aria-label="Filter berdasarkan trait">
                     <option value="">Semua Trait</option>
                     <option value="brave">Brave</option>
                     <option value="smart">Smart</option>
@@ -54,75 +60,35 @@
 
             <div class="list-section">
                 <h3>Daftar Karakter</h3>
-                <div id="browseCharacterList" class="character-list"></div>
+                <div id="browseCharacterList" class="character-list" role="list" aria-label="Daftar karakter"></div>
             </div>
         </div>
-
-        <button onclick="closeBrowse()" class="back-btn">← Kembali</button>
+        <button onclick="closeBrowse()" class="back-btn" aria-label="Kembali ke halaman utama">← Kembali</button>
     </div>
 
     <!-- HALAMAN QUIZ -->
-    <div id="quiz" class="container hidden fadeIn">
+    <div id="quiz" class="container hidden fadeIn" role="main">
         <h1>Pertanyaan Kepribadian</h1>
-        <div id="quizContent"></div>
+        <div id="quizContent" role="region" aria-label="Pertanyaan kuis kepribadian"></div>
     </div>
 
-    <!-- PANEL ADMIN TAMBAH KARAKTER -->
+    <!-- PANEL ADMIN KELOLA KARAKTER -->
     <div id="adminPanel" class="container hidden fadeIn">
         <h1>Kelola Karakter</h1>
+        <div class="admin-nav">
+            <button id="navCharacters" class="nav-btn active" onclick="switchAdminTab('characters')">👤 Karakter</button>
+            <button id="navMappings" class="nav-btn" onclick="switchAdminTab('mappings')">🔗 Mapping</button>
+            <button id="navStats" class="nav-btn" onclick="switchAdminTab('stats')">📊 Statistik</button>
+        </div>
+        <div id="adminMessage" class="admin-message"></div>
         <div class="admin-content">
-            <div class="form-section">
-                <h3>Tambah Karakter Baru</h3>
-                <input type="text" id="charName" placeholder="Nama Karakter..." />
-                <select id="charGender">
-                    <option value="">-- Pilih Gender --</option>
-                    <option value="male">Laki-laki</option>
-                    <option value="female">Perempuan</option>
-                    <option value="anomali">Anomali</option>
-                </select>
-                <input type="text" id="charImg" placeholder="Path gambar (cth: images/nama.png)" />
-                <input type="text" id="charSound" placeholder="Path suara (cth: sounds/nama.mp3)" />
-                <textarea id="charDesc" placeholder="Ciri-ciri..." maxlength="50"></textarea>
-                <textarea id="charDetails" placeholder="Deskripsi singkat..."></textarea>
-                <textarea id="charWords" placeholder="Kata-kata karakter..."></textarea>
-
-                <div class="traits-form">
-                    <label>Trait (0-3):</label>
-                    <div class="trait-grid">
-                        <div><label>Brave:</label><input type="number" id="traitBrave" min="0" max="3" value="0" /></div>
-                        <div><label>Smart:</label><input type="number" id="traitSmart" min="0" max="3" value="0" /></div>
-                        <div><label>Gentle:</label><input type="number" id="traitGentle" min="0" max="3" value="0" /></div>
-                        <div><label>Leader:</label><input type="number" id="traitLeader" min="0" max="3" value="0" /></div>
-                        <div><label>Warm:</label><input type="number" id="traitWarm" min="0" max="3" value="0" /></div>
-                        <div><label>Cautious:</label><input type="number" id="traitCautious" min="0" max="3" value="0" /></div>
-                    </div>
-                </div>
-
-                <button onclick="addCharacter()">Tambah Karakter</button>
+            <div class="form-section" id="adminForm">
+                <!-- Form content will be switched by JS -->
             </div>
-
-            <div class="list-section">
-                <h3>Daftar Karakter</h3>
-                <div id="characterList" class="character-list"></div>
+            <div class="list-section" id="adminList">
+                <!-- List content will be switched by JS -->
             </div>
         </div>
-
-        <div class="admin-content">
-            <div class="form-section">
-                <h3>Kelola Mapping Nama</h3>
-                <input type="text" id="mapName" placeholder="Nama (cth: rara)" />
-                <select id="mapCharacter">
-                    <option value="">-- Pilih Karakter --</option>
-                </select>
-                <button onclick="addNameMapping()">Tambah Mapping</button>
-            </div>
-
-            <div class="list-section">
-                <h3>Daftar Mapping Nama</h3>
-                <div id="nameMappingList" class="character-list"></div>
-            </div>
-        </div>
-
         <button onclick="closeAdmin()" class="back-btn">← Kembali</button>
     </div>
 
@@ -143,10 +109,10 @@
     <div id="errorMessage">Error: Sistem tidak dapat memproses karakter ini</div>
 
     <!-- MODAL TUTORIAL -->
-    <div id="tutorialModal" class="modal hidden">
+    <div id="tutorialModal" class="modal hidden" role="dialog" aria-labelledby="tutorialTitle" aria-modal="true">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeTutorial()">&times;</span>
-            <h2>🎮 Panduan Lengkap Gacha Personality</h2>
+            <span class="close-btn" onclick="closeTutorial()" aria-label="Tutup tutorial">&times;</span>
+            <h2 id="tutorialTitle">🎮 Panduan Lengkap Gacha Personality</h2>
             <div class="tutorial-content">
                 <div class="tutorial-step">
                     <h3>🎯 Pilih Mode Gacha</h3>
@@ -176,7 +142,7 @@
                     <p>Jawab dengan jujur untuk hasil yang akurat. Kamu bisa coba lagi kapan saja!</p>
                 </div>
             </div>
-            <button onclick="closeTutorial()" class="tutorial-close-btn">Ayo Mulai! 🚀</button>
+            <button onclick="closeTutorial()" class="tutorial-close-btn" aria-label="Tutup tutorial dan mulai">Ayo Mulai! 🚀</button>
         </div>
     </div>
 

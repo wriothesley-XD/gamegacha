@@ -1,5 +1,7 @@
 {
     "accessibility.signalOptions.debouncePositionChanges": true,
-    "vscode-pets.theme": "autumn",
-    "vscode-pets.throwBallWithMouse": true
+    "vscode-pets.theme": "none",
+    "vscode-pets.throwBallWithMouse": true,
+    "vscode-pets.position": "explorer",
+    "CodeGPT.apiKey": "OpenAI"
 }
