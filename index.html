@@ -15,39 +15,61 @@
 
     <!-- HALAMAN AWAL -->
     <div class="container fadeIn" id="home" role="main">
-        <h1>Masukkan Nama Kamu</h1>
-        <label for="username" class="sr-only">Nama kamu</label>
-        <input type="text" id="username" placeholder="Nama kamu..." aria-label="Masukkan nama kamu" />
-        <div class="gacha-buttons">
-            <button onclick="startQuiz('personality')" aria-label="Mulai kuis kepribadian untuk menemukan karakter mirip">🔍 Kamu Mirip Siapa?</button>
-            <button onclick="startQuiz('compatibility')" aria-label="Mulai kuis kompatibilitas untuk menemukan pasangan">💕 Pasangan Mu?</button>
-            <button onclick="startRandomGacha()" aria-label="Mulai gacha acak tanpa kuis">🎲 Gacha Acak</button>
+        <div class="hero-section">
+            <h1 class="main-title">🎮 Gacha Personality</h1>
+            <p class="subtitle">Temukan karakter yang cocok dengan kepribadianmu!</p>
         </div>
-        <div class="home-buttons">
-            <button onclick="openBrowse()" class="home-btn" aria-label="Buka panel jelajahi karakter">📚 Jelajahi Karakter</button>
-            <button onclick="openTutorial()" class="home-btn" aria-label="Buka panduan tutorial">❓ Bantuan</button>
+
+        <div class="input-section">
+            <label for="username" class="sr-only">Nama kamu</label>
+            <input type="text" id="username" placeholder="Masukkan nama kamu..." aria-label="Masukkan nama kamu" />
+            <div id="message" style="color: red; text-align: center; margin: 10px; font-weight: bold;"></div>
         </div>
-        <button id="adminBtn" class="admin-btn" aria-label="Buka panel admin untuk mengelola karakter">⚙️ Kelola Karakter</button>
-        <button id="importBtn" class="admin-btn" aria-label="Buka panel import/export karakter" style="margin-top: 10px;">📁 Import/Export JSON</button>
+
+        <div class="primary-actions">
+            <button onclick="startQuiz('personality')" class="action-btn personality-btn" aria-label="Mulai kuis kepribadian untuk menemukan karakter mirip">
+                <span class="btn-icon">🔍</span>
+                <span class="btn-text">Kamu Mirip Siapa?</span>
+            </button>
+            <button onclick="startQuiz('compatibility')" class="action-btn compatibility-btn" aria-label="Mulai kuis kompatibilitas untuk menemukan pasangan">
+                <span class="btn-icon">💕</span>
+                <span class="btn-text">Pasangan Mu?</span>
+            </button>
+            <button onclick="startRandomGacha()" class="action-btn random-btn" aria-label="Mulai gacha acak tanpa kuis">
+                <span class="btn-icon">🎲</span>
+                <span class="btn-text">Gacha Acak</span>
+            </button>
+        </div>
+
+        <div class="secondary-actions">
+            <button onclick="openBrowse()" class="secondary-btn" aria-label="Buka panel jelajahi karakter">
+                <span class="btn-icon">📚</span>
+                <span class="btn-text">Jelajahi Karakter</span>
+            </button>
+            <button onclick="openTutorial()" class="secondary-btn" aria-label="Buka panduan tutorial">
+                <span class="btn-icon">❓</span>
+                <span class="btn-text">Bantuan</span>
+            </button>
+            <button id="adminBtn" class="secondary-btn admin-btn" onclick="openAdmin()" aria-label="Buka panel admin untuk mengelola karakter">
+                <span class="btn-icon">⚙️</span>
+                <span class="btn-text">Kelola Karakter</span>
+            </button>
+        </div>
     </div>
 
     <!-- PANEL BROWSE KARAKTER -->
     <div id="browsePanel" class="container hidden fadeIn" role="main">
-        <h1>Jelajahi Karakter</h1>
-        <div class="admin-content">
-            <div class="form-section">
-                <h3>Cari & Filter</h3>
-                <label for="searchName" class="sr-only">Cari nama karakter</label>
-                <input type="text" id="searchName" placeholder="Cari nama karakter..." oninput="filterCharacters()" aria-label="Cari nama karakter" />
-                <label for="filterGender" class="sr-only">Filter berdasarkan gender</label>
-                <select id="filterGender" onchange="filterCharacters()" aria-label="Filter berdasarkan gender">
+        <div class="filter-section">
+            <h3>Jelajahi Karakter</h3>
+            <div class="filter-controls">
+                <input type="text" id="searchName" placeholder="Cari nama karakter..." oninput="displayBrowseCharacters()" aria-label="Cari nama karakter" />
+                <select id="filterGender" onchange="displayBrowseCharacters()" aria-label="Filter berdasarkan gender">
                     <option value="">Semua Gender</option>
                     <option value="male">Laki-laki</option>
                     <option value="female">Perempuan</option>
                     <option value="anomali">Anomali</option>
                 </select>
-                <label for="filterTrait" class="sr-only">Filter berdasarkan trait</label>
-                <select id="filterTrait" onchange="filterCharacters()" aria-label="Filter berdasarkan trait">
+                <select id="filterTrait" onchange="displayBrowseCharacters()" aria-label="Filter berdasarkan trait">
                     <option value="">Semua Trait</option>
                     <option value="brave">Brave</option>
                     <option value="smart">Smart</option>
@@ -57,12 +79,12 @@
                     <option value="cautious">Cautious</option>
                 </select>
             </div>
-
-            <div class="list-section">
-                <h3>Daftar Karakter</h3>
-                <div id="browseCharacterList" class="character-list" role="list" aria-label="Daftar karakter"></div>
-            </div>
         </div>
+
+        <div id="browseCharacterList" class="character-list" role="list" aria-label="Daftar karakter"></div>
+
+        <div id="pagination" class="pagination"></div>
+
         <button onclick="closeBrowse()" class="back-btn" aria-label="Kembali ke halaman utama">← Kembali</button>
     </div>
 
@@ -79,6 +101,7 @@
             <button id="navCharacters" class="nav-btn active" onclick="switchAdminTab('characters')">👤 Karakter</button>
             <button id="navMappings" class="nav-btn" onclick="switchAdminTab('mappings')">🔗 Mapping</button>
             <button id="navStats" class="nav-btn" onclick="switchAdminTab('stats')">📊 Statistik</button>
+            <button id="navImport" class="nav-btn" onclick="switchAdminTab('import')">📁 Import/Export JSON</button>
         </div>
         <div id="adminMessage" class="admin-message"></div>
         <div class="admin-content">
@@ -148,7 +171,5 @@
 
     <script src="script.js"></script>
 </body>
-
-</html>
 
 </html>

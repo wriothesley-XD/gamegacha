@@ -590,8 +590,11 @@ let currentQuestion = 0;
 let username = "";
 let selectedAnswerIdx = -1;
 let gachaMode = "personality"; // "personality" atau "compatibility"
+let currentViewMode = 'grid'; // 'grid' atau 'list'
+let currentPage = 1;
+const charactersPerPage = 8;
 
-document.getElementById("adminBtn").addEventListener("click", openAdmin);
+// document.getElementById("adminBtn").addEventListener("click", openAdmin); // Commented out since onclick is in HTML
 document.getElementById("importBtn").addEventListener("click", openImportTab);
 
 function openBrowse() {
@@ -605,6 +608,11 @@ function openBrowse() {
         traitSelect.innerHTML += `<option value="${key}">${trans}</option>`;
     });
 
+    // Reset to page 1 and display characters using grid view
+    currentPage = 1;
+    currentViewMode = 'grid';
+
+    // Call the correct display function that shows the grid
     displayBrowseCharacters();
 }
 
@@ -619,65 +627,6 @@ function openTutorial() {
 
 function closeTutorial() {
     document.getElementById("tutorialModal").classList.add("hidden");
-}
-
-function displayBrowseCharacters() {
-    const list = document.getElementById("browseCharacterList");
-    list.innerHTML = "";
-    characters.forEach(char => {
-        const traits = characterTraits[char.name];
-        const traitText = traits ? Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${traitTranslations[k] || k}: ${v}`).join(", ") : "N/A";
-
-        list.innerHTML += `
-            <div class="char-item">
-                <img src="${char.img}" alt="${char.name}" class="char-thumbnail" onerror="this.style.display='none'">
-                <div class="info">
-                    <div class="name">${char.name}</div>
-                    <div class="gender">${char.gender === "male" ? "♂ Laki-laki" : char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}</div>
-                    <div class="desc">${char.desc}</div>
-                    <small style="color: #999;">${traitText}</small>
-                </div>
-                <div class="char-actions">
-                    <button class="char-item-btn" onclick="viewCharacter('${char.name}')">Lihat Detail</button>
-                </div>
-            </div>
-    `;
-    });
-}
-
-function filterCharacters() {
-    const searchTerm = document.getElementById("searchName").value.toLowerCase();
-    const genderFilter = document.getElementById("filterGender").value;
-    const traitFilter = document.getElementById("filterTrait").value;
-
-    const list = document.getElementById("browseCharacterList");
-    list.innerHTML = "";
-
-    characters.forEach(char => {
-        const matchesSearch = char.name.toLowerCase().includes(searchTerm);
-        const matchesGender = !genderFilter || char.gender === genderFilter;
-        const traits = characterTraits[char.name] || {};
-        const matchesTrait = !traitFilter || (traits[traitFilter] && traits[traitFilter] > 0);
-
-        if (matchesSearch && matchesGender && matchesTrait) {
-            const traitText = traits ? Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${traitTranslations[k] || k}: ${v}`).join(", ") : "N/A";
-
-            list.innerHTML += `
-                <div class="char-item">
-                    <img src="${char.img}" alt="${char.name}" class="char-thumbnail" onerror="this.style.display='none'">
-                    <div class="info">
-                        <div class="name">${char.name}</div>
-                        <div class="gender">${char.gender === "male" ? "♂ Laki-laki" : char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}</div>
-                        <div class="desc">${char.desc}</div>
-                        <small style="color: #999;">${traitText}</small>
-                    </div>
-                    <div class="char-actions">
-                        <button class="char-item-btn" onclick="viewCharacter('${char.name}')">Lihat Detail</button>
-                    </div>
-                </div>
-        `;
-        }
-    });
 }
 
 function viewCharacter(name) {
@@ -715,6 +664,284 @@ function viewCharacter(name) {
 function closeCharacterView() {
     document.getElementById("result").classList.add("hidden");
     document.getElementById("browsePanel").classList.remove("hidden");
+}
+
+// NEW GRID-BASED CHARACTER DISPLAY FUNCTIONS
+function displayBrowseCharacters() {
+    const container = document.getElementById("browseCharacterList");
+    const searchTerm = document.getElementById("searchName").value.toLowerCase().trim();
+    const genderFilter = document.getElementById("filterGender").value;
+    const traitFilter = document.getElementById("filterTrait").value;
+
+    // Filter characters
+    const filteredChars = characters.filter(char => {
+        // Improved search: case-insensitive and matches partial names
+        const charNameLower = char.name.toLowerCase();
+        const matchesSearch = !searchTerm || charNameLower.includes(searchTerm);
+        const matchesGender = !genderFilter || char.gender === genderFilter;
+        const traits = characterTraits[char.name] || {};
+        const matchesTrait = !traitFilter || (traits[traitFilter] && traits[traitFilter] > 0);
+
+        return matchesSearch && matchesGender && matchesTrait;
+    });
+
+    // Always use grid view since we removed list view
+    currentViewMode = 'grid';
+    displayCharacterGrid(filteredChars);
+
+    // Update pagination
+    updatePagination(filteredChars.length);
+}
+
+function displayCharacterGrid(charactersToDisplay) {
+    const container = document.getElementById("browseCharacterList");
+    container.innerHTML = '<div class="browse-grid-container" id="characterGrid"></div>';
+
+    const grid = document.getElementById("characterGrid");
+
+    // Calculate pagination
+    const startIndex = (currentPage - 1) * charactersPerPage;
+    const endIndex = Math.min(startIndex + charactersPerPage, charactersToDisplay.length);
+    const paginatedChars = charactersToDisplay.slice(startIndex, endIndex);
+
+    if (paginatedChars.length === 0) {
+        grid.innerHTML = '<div class="no-results">Tidak ada karakter yang ditemukan.</div>';
+        return;
+    }
+
+    paginatedChars.forEach(char => {
+        const traits = characterTraits[char.name] || {};
+        const topTraits = Object.entries(traits)
+            .filter(([_, v]) => v > 0)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 3)
+            .map(([k]) => traitTranslations[k] || k)
+            .join(", ");
+
+        const genderClass = char.gender === "male" ? "male" :
+                          char.gender === "female" ? "female" : "anomali";
+
+        grid.innerHTML += `
+            <div class="character-card" onclick="showCharacterDetail('${char.name}')">
+                <img src="${char.img}" alt="${char.name}" onerror="this.src='images/default.png'">
+                <div class="desc">${char.desc}</div>
+                <div class="name">${char.name}</div>
+                <div class="gender ${genderClass}">
+                    ${char.gender === "male" ? "♂ Laki-laki" :
+                     char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}
+                </div>
+        <div class="trait-badge">${topTraits}</div>
+                <button class="view-btn" onclick="event.stopPropagation(); showCharacterDetail('${char.name}')">Lihat Detail</button>
+            </div>
+        `;
+    });
+}
+
+function displayCharacterList(charactersToDisplay) {
+    const container = document.getElementById("browseCharacterList");
+    container.innerHTML = '<div class="character-list" id="characterList"></div>';
+
+    const list = document.getElementById("characterList");
+
+    // Calculate pagination
+    const startIndex = (currentPage - 1) * charactersPerPage;
+    const endIndex = Math.min(startIndex + charactersPerPage, charactersToDisplay.length);
+    const paginatedChars = charactersToDisplay.slice(startIndex, endIndex);
+
+    if (paginatedChars.length === 0) {
+        list.innerHTML = '<div class="no-results">Tidak ada karakter yang ditemukan.</div>';
+        return;
+    }
+
+    paginatedChars.forEach(char => {
+        const traits = characterTraits[char.name] || {};
+        const traitText = Object.entries(traits)
+            .filter(([_, v]) => v > 0)
+            .map(([k, v]) => `${traitTranslations[k] || k}: ${v}`)
+            .join(", ");
+
+        list.innerHTML += `
+            <div class="char-item">
+                <img src="${char.img}" alt="${char.name}" class="char-thumbnail" onerror="this.style.display='none'">
+                <div class="info">
+                    <div class="name">${char.name}</div>
+                    <div class="gender">
+                        ${char.gender === "male" ? "♂ Laki-laki" :
+                         char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}
+                    </div>
+                    <div class="desc">${char.desc}</div>
+                    <small style="color: #999;">${traitText}</small>
+                </div>
+                <div class="char-actions">
+                    <button class="char-item-btn" onclick="showCharacterDetail('${char.name}')">Lihat Detail</button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function showCharacterDetail(name) {
+    const char = characters.find(c => c.name === name);
+    if (!char) return;
+
+    const traits = characterTraits[name] || {};
+    const genderClass = char.gender === "male" ? "male" :
+                      char.gender === "female" ? "female" : "anomali";
+
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'character-detail-modal';
+    modal.innerHTML = `
+        <div class="character-detail-content">
+            <span class="character-detail-close" onclick="closeCharacterDetailModal(this)">&times;</span>
+            <div class="character-detail-header">
+                <img src="${char.img}" alt="${char.name}" onerror="this.src='images/default.png'">
+                <div class="character-detail-info">
+                    <h2>${char.name}</h2>
+                    <span class="gender-badge ${genderClass}">
+                        ${char.gender === "male" ? "♂ Laki-laki" :
+                         char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}
+                    </span>
+                    <div class="character-detail-desc">
+                        <p>${char.desc}</p>
+                    </div>
+                    <div class="character-detail-traits">
+                        ${Object.entries(traits)
+                            .filter(([_, v]) => v > 0)
+                            .map(([k, v]) => `<span class="trait-item">${traitIndoTranslations[k] || k}: ${v}</span>`)
+                            .join('')}
+                    </div>
+                </div>
+            </div>
+
+            <div class="character-detail-section">
+                <h3>Deskripsi Lengkap</h3>
+                <p>${char.details}</p>
+            </div>
+
+            <div class="character-detail-quote">
+                "${char.words}"
+            </div>
+
+            <button class="character-detail-close-btn" onclick="closeCharacterDetailModal(this)">Tutup</button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Add click outside to close
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeCharacterDetailModal(modal.querySelector('.character-detail-close'));
+        }
+    });
+}
+
+function closeCharacterDetailModal(element) {
+    const modal = element.closest('.character-detail-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function toggleViewMode(mode) {
+    currentViewMode = mode;
+    currentPage = 1; // Reset to first page when changing view
+
+    // Update button styles
+    document.querySelectorAll('.view-mode-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    displayBrowseCharacters();
+}
+
+function updatePagination(totalCharacters) {
+    const totalPages = Math.ceil(totalCharacters / charactersPerPage);
+    const paginationContainer = document.getElementById("pagination");
+
+    if (!paginationContainer) return;
+
+    let paginationHTML = '';
+
+    // Previous button
+    paginationHTML += `
+        <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+            ← Sebelumnya
+        </button>
+    `;
+
+    // Page numbers
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    if (startPage > 1) {
+        paginationHTML += `<button onclick="changePage(1)">1</button>`;
+        if (startPage > 2) {
+            paginationHTML += `<span>...</span>`;
+        }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `
+            <button onclick="changePage(${i})" class="${i === currentPage ? 'active' : ''}">
+                ${i}
+            </button>
+        `;
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            paginationHTML += `<span>...</span>`;
+        }
+        paginationHTML += `<button onclick="changePage(${totalPages})">${totalPages}</button>`;
+    }
+
+    // Next button
+    paginationHTML += `
+        <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+            Selanjutnya →
+        </button>
+    `;
+
+    paginationContainer.innerHTML = paginationHTML;
+}
+
+function changePage(page) {
+    const totalCharacters = characters.filter(char => {
+        const searchTerm = document.getElementById("searchName").value.toLowerCase();
+        const genderFilter = document.getElementById("filterGender").value;
+        const traitFilter = document.getElementById("filterTrait").value;
+
+        const matchesSearch = char.name.toLowerCase().includes(searchTerm);
+        const matchesGender = !genderFilter || char.gender === genderFilter;
+        const traits = characterTraits[char.name] || {};
+        const matchesTrait = !traitFilter || (traits[traitFilter] && traits[traitFilter] > 0);
+
+        return matchesSearch && matchesGender && matchesTrait;
+    }).length;
+
+    const totalPages = Math.ceil(totalCharacters / charactersPerPage);
+
+    if (page < 1) page = 1;
+    if (page > totalPages) page = totalPages;
+
+    currentPage = page;
+    displayBrowseCharacters();
+}
+
+function clearFilters() {
+    document.getElementById("searchName").value = "";
+    document.getElementById("filterGender").value = "";
+    document.getElementById("filterTrait").value = "";
+    currentPage = 1;
+    displayBrowseCharacters();
 }
 
 // Load karakter dari localStorage saat halaman muat
@@ -808,11 +1035,14 @@ function loadCharactersFromJSONFile() {
 }
 
 function startQuiz(mode) {
-    username = document.getElementById("username").value;
+    username = document.getElementById("username").value.trim();
     if (!username) {
-        alert("Isi nama dulu ya!");
+        showMessage("Isi nama dulu ya!");
         return;
     }
+
+    // Clear any previous messages
+    showMessage("");
 
     gachaMode = mode;
     document.getElementById("home").classList.add("hidden");
@@ -1367,12 +1597,6 @@ function loadCharactersFromStorage() {
 const ADMIN_PASSWORD = "l"; // Change this to your desired password
 
 function openAdmin() {
-    const password = prompt("Enter admin password:");
-    if (password !== ADMIN_PASSWORD) {
-        alert("Wrong password!");
-        return;
-    }
-
     document.getElementById("home").classList.add("hidden");
     document.getElementById("adminPanel").classList.remove("hidden");
     switchAdminTab('characters');
@@ -1482,6 +1706,18 @@ function switchAdminTab(tab) {
                 <h4>Reset Data</h4>
                 <button onclick="resetToDefault()" style="width: 100%; background: #e74c3c;">🗑️ Reset ke Default</button>
                 <small style="color: #666;">Hapus semua karakter custom (karakter default tetap)</small>
+            </div>
+
+            <!-- SECTION 5: SETTINGS -->
+            <div class="import-section" style="margin-top: 20px;">
+                <h4>Pengaturan Tampilan</h4>
+                <div style="display: flex; gap: 10px; margin: 10px 0;">
+                    <button onclick="toggleBrowseFeature()" style="width: 100%; background: #ff9800;">👁️ ${getBrowseFeatureStatus() ? 'Sembunyikan' : 'Tampilkan'} Jelajahi Karakter</button>
+                </div>
+                <small style="color: #666;">Aktifkan/nonaktifkan fitur jelajahi karakter di halaman utama</small>
+                <p id="browseFeatureStatus" style="margin-top: 10px; font-size: 0.9em; color: #333;">
+                    Status: <strong>${getBrowseFeatureStatus() ? 'Aktif' : 'Nonaktif'}</strong>
+                </p>
             </div>
         `;
         listSection.innerHTML = '<h3>Status Import</h3><div id="importStatus"></div>';
@@ -2076,15 +2312,66 @@ function resetToDefault() {
     if (!confirm("HAPUS SEMUA KARAKTER CUSTOM?\nKarakter default tetap aman.")) {
         return;
     }
-    
+
     // Hanya hapus karakter custom dari localStorage
     localStorage.removeItem("customCharacters");
     localStorage.removeItem("customTraits");
-    
+
     // Reset array characters ke default (hardcoded)
     // Anda perlu mendefinisikan ulang array characters dengan karakter default saja
     // Atau reload halaman
     location.reload();
-    
+
     showAdminMessage("✅ Data karakter custom telah direset!");
 }
+
+// Fungsi untuk toggle fitur jelajahi karakter
+function toggleBrowseFeature() {
+    const currentStatus = getBrowseFeatureStatus();
+    const newStatus = !currentStatus;
+
+    // Simpan status ke localStorage
+    localStorage.setItem('browseFeatureEnabled', newStatus);
+
+    // Update UI
+    updateBrowseFeatureUI();
+
+    // Tampilkan pesan
+    showAdminMessage(`✅ Fitur Jelajahi Karakter ${newStatus ? 'diaktifkan' : 'dinonaktifkan'}`);
+
+    // Refresh halaman untuk menerapkan perubahan
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+}
+
+function getBrowseFeatureStatus() {
+    // Default adalah true (aktif)
+    const status = localStorage.getItem('browseFeatureEnabled');
+    return status !== 'false'; // Jika null atau 'true', return true
+}
+
+function updateBrowseFeatureUI() {
+    const status = getBrowseFeatureStatus();
+    const statusElement = document.getElementById('browseFeatureStatus');
+    const toggleButton = document.querySelector('[onclick="toggleBrowseFeature()"]');
+
+    if (statusElement) {
+        statusElement.innerHTML = `Status: <strong>${status ? 'Aktif' : 'Nonaktif'}</strong>`;
+    }
+
+    if (toggleButton) {
+        toggleButton.textContent = `👁️ ${status ? 'Sembunyikan' : 'Tampilkan'} Jelajahi Karakter`;
+    }
+}
+
+// Panggil updateBrowseFeatureUI saat halaman dimuat
+window.addEventListener('load', () => {
+    updateBrowseFeatureUI();
+
+    // Sembunyikan tombol jelajahi karakter jika fitur dinonaktifkan
+    const browseButton = document.querySelector('[onclick="openBrowse()"]');
+    if (browseButton) {
+        browseButton.style.display = getBrowseFeatureStatus() ? '' : 'none';
+    }
+});

@@ -3,5 +3,6 @@
     "vscode-pets.theme": "none",
     "vscode-pets.throwBallWithMouse": true,
     "vscode-pets.position": "explorer",
-    "CodeGPT.apiKey": "OpenAI"
+    "CodeGPT.apiKey": "OpenAI",
+    "liveServer.settings.port": 5501
 }
