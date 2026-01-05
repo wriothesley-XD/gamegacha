@@ -120,7 +120,6 @@ const characters = [{
         gender: "male",
         img: "images/mydei.png",
         desc: "Pemarah tapi baik & suka anak-anak.",
-        details: "Mydei adalah sosok yang pemarah namun memiliki hati yang baik dan sangat menyukai anak-anak. Ia sering marah-marah namun selalu siap membantu orang yang membutuhkan, terutama anak-anak yang ia sayangi. Meskipun temperamennya panas, ia sangat setia dan peduli terhadap teman-teman terdekatnya, selalu berusaha melindungi mereka dengan caranya sendiri.",
         words: "Jangan membuatku marah, tapi aku akan selalu menolongmu.",
         sound: "sounds/mydei.mp3"
     },
@@ -361,35 +360,6 @@ const characters = [{
     }
 ];
 
-const traitTranslations = {
-    brave: "berani",
-    smart: "cerdas",
-    gentle: "lembut",
-    leader: "pemimpin",
-    warm: "hangat",
-    cautious: "hati-hati"
-};
-
-// Terjemahan ke bahasa Indonesia
-const traitIndoTranslations = {
-    brave: "Berani",
-    smart: "Cerdas",
-    gentle: "Lemah Lembut",
-    leader: "Kepemimpinan",
-    warm: "Hangat",
-    cautious: "Berhati-hati"
-};
-
-// Mapping untuk backward compatibility
-const traitKeys = {
-    brave: "berani",
-    smart: "cerdas",
-    gentle: "lembut",
-    leader: "pemimpin",
-    warm: "hangat",
-    cautious: "hati_hati"
-};
-
 const characterTraits = {
     "Clorinde": { brave: 3, smart: 2, leader: 2 },
     "Phainon": { brave: 3, leader: 2, warm: 2 },
@@ -590,29 +560,12 @@ let currentQuestion = 0;
 let username = "";
 let selectedAnswerIdx = -1;
 let gachaMode = "personality"; // "personality" atau "compatibility"
-let currentViewMode = 'grid'; // 'grid' atau 'list'
-let currentPage = 1;
-const charactersPerPage = 8;
 
-// document.getElementById("adminBtn").addEventListener("click", openAdmin); // Commented out since onclick is in HTML
-document.getElementById("importBtn").addEventListener("click", openImportTab);
+document.getElementById("adminBtn").addEventListener("click", openAdmin);
 
 function openBrowse() {
     document.getElementById("home").classList.add("hidden");
     document.getElementById("browsePanel").classList.remove("hidden");
-
-    // Populate trait filter with translated options
-    const traitSelect = document.getElementById("filterTrait");
-    traitSelect.innerHTML = '<option value="">Semua Trait</option>';
-    Object.entries(traitTranslations).forEach(([key, trans]) => {
-        traitSelect.innerHTML += `<option value="${key}">${trans}</option>`;
-    });
-
-    // Reset to page 1 and display characters using grid view
-    currentPage = 1;
-    currentViewMode = 'grid';
-
-    // Call the correct display function that shows the grid
     displayBrowseCharacters();
 }
 
@@ -629,12 +582,71 @@ function closeTutorial() {
     document.getElementById("tutorialModal").classList.add("hidden");
 }
 
+function displayBrowseCharacters() {
+    const list = document.getElementById("browseCharacterList");
+    list.innerHTML = "";
+    characters.forEach(char => {
+        const traits = characterTraits[char.name];
+        const traitText = traits ? Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${k}: ${v}`).join(", ") : "N/A";
+
+        list.innerHTML += `
+            <div class="char-item">
+                <img src="${char.img}" alt="${char.name}" class="char-thumbnail" onerror="this.style.display='none'">
+                <div class="info">
+                    <div class="name">${char.name}</div>
+                    <div class="gender">${char.gender === "male" ? "♂ Laki-laki" : char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}</div>
+                    <div class="desc">${char.desc}</div>
+                    <small style="color: #999;">${traitText}</small>
+                </div>
+                <div class="char-actions">
+                    <button class="char-item-btn" onclick="viewCharacter('${char.name}')">Lihat Detail</button>
+                </div>
+            </div>
+    `;
+    });
+}
+
+function filterCharacters() {
+    const searchTerm = document.getElementById("searchName").value.toLowerCase();
+    const genderFilter = document.getElementById("filterGender").value;
+    const traitFilter = document.getElementById("filterTrait").value;
+
+    const list = document.getElementById("browseCharacterList");
+    list.innerHTML = "";
+
+    characters.forEach(char => {
+        const matchesSearch = char.name.toLowerCase().includes(searchTerm);
+        const matchesGender = !genderFilter || char.gender === genderFilter;
+        const traits = characterTraits[char.name] || {};
+        const matchesTrait = !traitFilter || (traits[traitFilter] && traits[traitFilter] > 0);
+
+        if (matchesSearch && matchesGender && matchesTrait) {
+            const traitText = traits ? Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${k}: ${v}`).join(", ") : "N/A";
+
+            list.innerHTML += `
+                <div class="char-item">
+                    <img src="${char.img}" alt="${char.name}" class="char-thumbnail" onerror="this.style.display='none'">
+                    <div class="info">
+                        <div class="name">${char.name}</div>
+                        <div class="gender">${char.gender === "male" ? "♂ Laki-laki" : char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}</div>
+                        <div class="desc">${char.desc}</div>
+                        <small style="color: #999;">${traitText}</small>
+                    </div>
+                    <div class="char-actions">
+                        <button class="char-item-btn" onclick="viewCharacter('${char.name}')">Lihat Detail</button>
+                    </div>
+                </div>
+        `;
+        }
+    });
+}
+
 function viewCharacter(name) {
     const char = characters.find(c => c.name === name);
     if (!char) return;
 
     const traits = characterTraits[name];
-    const traitText = traits ? Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${traitTranslations[k] || k}: ${v}`).join(", ") : "N/A";
+    const traitText = traits ? Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${k}: ${v}`).join(", ") : "N/A";
 
     document.getElementById("result").innerHTML = `
         <h2>Detail Karakter</h2>
@@ -666,442 +678,40 @@ function closeCharacterView() {
     document.getElementById("browsePanel").classList.remove("hidden");
 }
 
-// NEW GRID-BASED CHARACTER DISPLAY FUNCTIONS
-function displayBrowseCharacters() {
-    const container = document.getElementById("browseCharacterList");
-    const searchTerm = document.getElementById("searchName").value.toLowerCase().trim();
-    const genderFilter = document.getElementById("filterGender").value;
-    const traitFilter = document.getElementById("filterTrait").value;
-
-    // Filter characters
-    const filteredChars = characters.filter(char => {
-        // Improved search: case-insensitive and matches partial names
-        const charNameLower = char.name.toLowerCase();
-        const matchesSearch = !searchTerm || charNameLower.includes(searchTerm);
-        const matchesGender = !genderFilter || char.gender === genderFilter;
-        const traits = characterTraits[char.name] || {};
-        const matchesTrait = !traitFilter || (traits[traitFilter] && traits[traitFilter] > 0);
-
-        return matchesSearch && matchesGender && matchesTrait;
-    });
-
-    // Always use grid view since we removed list view
-    currentViewMode = 'grid';
-    displayCharacterGrid(filteredChars);
-
-    // Update pagination
-    updatePagination(filteredChars.length);
-}
-
-function displayCharacterGrid(charactersToDisplay) {
-    const container = document.getElementById("browseCharacterList");
-    container.innerHTML = '<div class="browse-grid-container" id="characterGrid"></div>';
-
-    const grid = document.getElementById("characterGrid");
-
-    // Calculate pagination
-    const startIndex = (currentPage - 1) * charactersPerPage;
-    const endIndex = Math.min(startIndex + charactersPerPage, charactersToDisplay.length);
-    const paginatedChars = charactersToDisplay.slice(startIndex, endIndex);
-
-    if (paginatedChars.length === 0) {
-        grid.innerHTML = '<div class="no-results">Tidak ada karakter yang ditemukan.</div>';
-        return;
-    }
-
-    paginatedChars.forEach(char => {
-        const traits = characterTraits[char.name] || {};
-        const topTraits = Object.entries(traits)
-            .filter(([_, v]) => v > 0)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 3)
-            .map(([k]) => traitTranslations[k] || k)
-            .join(", ");
-
-        const genderClass = char.gender === "male" ? "male" :
-                          char.gender === "female" ? "female" : "anomali";
-
-        grid.innerHTML += `
-            <div class="character-card" onclick="showCharacterDetail('${char.name}')">
-                <img src="${char.img}" alt="${char.name}" onerror="this.src='images/default.png'">
-                <div class="desc">${char.desc}</div>
-                <div class="name">${char.name}</div>
-                <div class="gender ${genderClass}">
-                    ${char.gender === "male" ? "♂ Laki-laki" :
-                     char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}
-                </div>
-        <div class="trait-badge">${topTraits}</div>
-                <button class="view-btn" onclick="event.stopPropagation(); showCharacterDetail('${char.name}')">Lihat Detail</button>
-            </div>
-        `;
-    });
-}
-
-function displayCharacterList(charactersToDisplay) {
-    const container = document.getElementById("browseCharacterList");
-    container.innerHTML = '<div class="character-list" id="characterList"></div>';
-
-    const list = document.getElementById("characterList");
-
-    // Calculate pagination
-    const startIndex = (currentPage - 1) * charactersPerPage;
-    const endIndex = Math.min(startIndex + charactersPerPage, charactersToDisplay.length);
-    const paginatedChars = charactersToDisplay.slice(startIndex, endIndex);
-
-    if (paginatedChars.length === 0) {
-        list.innerHTML = '<div class="no-results">Tidak ada karakter yang ditemukan.</div>';
-        return;
-    }
-
-    paginatedChars.forEach(char => {
-        const traits = characterTraits[char.name] || {};
-        const traitText = Object.entries(traits)
-            .filter(([_, v]) => v > 0)
-            .map(([k, v]) => `${traitTranslations[k] || k}: ${v}`)
-            .join(", ");
-
-        list.innerHTML += `
-            <div class="char-item">
-                <img src="${char.img}" alt="${char.name}" class="char-thumbnail" onerror="this.style.display='none'">
-                <div class="info">
-                    <div class="name">${char.name}</div>
-                    <div class="gender">
-                        ${char.gender === "male" ? "♂ Laki-laki" :
-                         char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}
-                    </div>
-                    <div class="desc">${char.desc}</div>
-                    <small style="color: #999;">${traitText}</small>
-                </div>
-                <div class="char-actions">
-                    <button class="char-item-btn" onclick="showCharacterDetail('${char.name}')">Lihat Detail</button>
-                </div>
-            </div>
-        `;
-    });
-}
-
-function showCharacterDetail(name) {
-    const char = characters.find(c => c.name === name);
-    if (!char) return;
-
-    const traits = characterTraits[name] || {};
-    const genderClass = char.gender === "male" ? "male" :
-                      char.gender === "female" ? "female" : "anomali";
-
-    // Create modal
-    const modal = document.createElement('div');
-    modal.className = 'character-detail-modal';
-    modal.innerHTML = `
-        <div class="character-detail-content">
-            <span class="character-detail-close" onclick="closeCharacterDetailModal(this)">&times;</span>
-            <div class="character-detail-header">
-                <img src="${char.img}" alt="${char.name}" onerror="this.src='images/default.png'">
-                <div class="character-detail-info">
-                    <h2>${char.name}</h2>
-                    <span class="gender-badge ${genderClass}">
-                        ${char.gender === "male" ? "♂ Laki-laki" :
-                         char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}
-                    </span>
-                    <div class="character-detail-desc">
-                        <p>${char.desc}</p>
-                    </div>
-                    <div class="character-detail-traits">
-                        ${Object.entries(traits)
-                            .filter(([_, v]) => v > 0)
-                            .map(([k, v]) => `<span class="trait-item">${traitIndoTranslations[k] || k}: ${v}</span>`)
-                            .join('')}
-                    </div>
-                </div>
-            </div>
-
-            <div class="character-detail-section">
-                <h3>Deskripsi Lengkap</h3>
-                <p>${char.details}</p>
-            </div>
-
-            <div class="character-detail-quote">
-                "${char.words}"
-            </div>
-
-            <button class="character-detail-close-btn" onclick="closeCharacterDetailModal(this)">Tutup</button>
-        </div>
-    `;
-
-    document.body.appendChild(modal);
-
-    // Add click outside to close
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closeCharacterDetailModal(modal.querySelector('.character-detail-close'));
-        }
-    });
-}
-
-function closeCharacterDetailModal(element) {
-    const modal = element.closest('.character-detail-modal');
-    if (modal) {
-        modal.remove();
-    }
-}
-
-function toggleViewMode(mode) {
-    currentViewMode = mode;
-    currentPage = 1; // Reset to first page when changing view
-
-    // Update button styles
-    document.querySelectorAll('.view-mode-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    event.target.classList.add('active');
-
-    displayBrowseCharacters();
-}
-
-function updatePagination(totalCharacters) {
-    const totalPages = Math.ceil(totalCharacters / charactersPerPage);
-    const paginationContainer = document.getElementById("pagination");
-
-    if (!paginationContainer) return;
-
-    let paginationHTML = '';
-
-    // Previous button
-    paginationHTML += `
-        <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
-            ← Sebelumnya
-        </button>
-    `;
-
-    // Page numbers
-    const maxVisiblePages = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-    if (endPage - startPage + 1 < maxVisiblePages) {
-        startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
-
-    if (startPage > 1) {
-        paginationHTML += `<button onclick="changePage(1)">1</button>`;
-        if (startPage > 2) {
-            paginationHTML += `<span>...</span>`;
-        }
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-        paginationHTML += `
-            <button onclick="changePage(${i})" class="${i === currentPage ? 'active' : ''}">
-                ${i}
-            </button>
-        `;
-    }
-
-    if (endPage < totalPages) {
-        if (endPage < totalPages - 1) {
-            paginationHTML += `<span>...</span>`;
-        }
-        paginationHTML += `<button onclick="changePage(${totalPages})">${totalPages}</button>`;
-    }
-
-    // Next button
-    paginationHTML += `
-        <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
-            Selanjutnya →
-        </button>
-    `;
-
-    paginationContainer.innerHTML = paginationHTML;
-}
-
-function changePage(page) {
-    const totalCharacters = characters.filter(char => {
-        const searchTerm = document.getElementById("searchName").value.toLowerCase();
-        const genderFilter = document.getElementById("filterGender").value;
-        const traitFilter = document.getElementById("filterTrait").value;
-
-        const matchesSearch = char.name.toLowerCase().includes(searchTerm);
-        const matchesGender = !genderFilter || char.gender === genderFilter;
-        const traits = characterTraits[char.name] || {};
-        const matchesTrait = !traitFilter || (traits[traitFilter] && traits[traitFilter] > 0);
-
-        return matchesSearch && matchesGender && matchesTrait;
-    }).length;
-
-    const totalPages = Math.ceil(totalCharacters / charactersPerPage);
-
-    if (page < 1) page = 1;
-    if (page > totalPages) page = totalPages;
-
-    currentPage = page;
-    displayBrowseCharacters();
-}
-
-function clearFilters() {
-    document.getElementById("searchName").value = "";
-    document.getElementById("filterGender").value = "";
-    document.getElementById("filterTrait").value = "";
-    currentPage = 1;
-    displayBrowseCharacters();
-}
-
 // Load karakter dari localStorage saat halaman muat
 window.addEventListener("load", () => {
     loadCharactersFromStorage();
     loadNameMappingsFromStorage();
 });
 
-// Fungsi untuk memuat karakter dari file characters.json
-function loadCharactersFromJSONFile() {
-    fetch('characters.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (!Array.isArray(data)) {
-                showAdminMessage("Format JSON tidak valid! Harus berupa array.", true);
-                return;
-            }
-
-            let importedCount = 0;
-            let skippedCount = 0;
-
-            // Load existing custom characters
-            let storedChars = localStorage.getItem("customCharacters");
-            let customChars = storedChars ? JSON.parse(storedChars) : [];
-            let storedTraits = localStorage.getItem("customTraits");
-            let customTraits = storedTraits ? JSON.parse(storedTraits) : {};
-
-            data.forEach(newChar => {
-                // Validasi minimal
-                if (!newChar.name || !newChar.gender || !newChar.desc) {
-                    skippedCount++;
-                    return;
-                }
-
-                // Cek duplikat
-                const isDuplicate = characters.some(c => c.name === newChar.name);
-                if (isDuplicate) {
-                    skippedCount++;
-                    return;
-                }
-
-                // Format data
-                const formattedChar = {
-                    name: newChar.name.trim(),
-                    gender: newChar.gender,
-                    img: newChar.img?.startsWith('images/') ? newChar.img : `images/${newChar.img || 'default.png'}`,
-                    desc: newChar.desc,
-                    details: newChar.details || newChar.desc,
-                    words: newChar.words || newChar.desc,
-                    sound: newChar.sound?.startsWith('sounds/') ? newChar.sound : `sounds/${newChar.sound || 'default.mp3'}`
-                };
-
-                // Tambah ke array
-                characters.push(formattedChar);
-                customChars.push(formattedChar);
-
-                // Handle traits
-                const traits = newChar.traits || {
-                    brave: newChar.brave || 0,
-                    smart: newChar.smart || 0,
-                    gentle: newChar.gentle || 0,
-                    leader: newChar.leader || 0,
-                    warm: newChar.warm || 0,
-                    cautious: newChar.cautious || 0
-                };
-
-                characterTraits[newChar.name] = traits;
-                customTraits[newChar.name] = traits;
-
-                importedCount++;
-            });
-
-            // Simpan ke localStorage
-            localStorage.setItem("customCharacters", JSON.stringify(customChars));
-            localStorage.setItem("customTraits", JSON.stringify(customTraits));
-
-            // Refresh tampilan
-            refreshCharacterList();
-            displayBrowseCharacters();
-            showAdminMessage(`✅ Import dari characters.json berhasil! ${importedCount} karakter ditambahkan, ${skippedCount} dilewati.`);
-        })
-        .catch(error => {
-            showAdminMessage(`❌ Error loading characters.json: ${error.message}`, true);
-            console.error('Error loading characters.json:', error);
-        });
-}
-
-function startQuiz(mode) {
-    username = document.getElementById("username").value.trim();
-    if (!username) {
-        showMessage("Isi nama dulu ya!");
-        return;
-    }
-
-    // Clear any previous messages
-    showMessage("");
-
-    gachaMode = mode;
-    document.getElementById("home").classList.add("hidden");
-    document.getElementById("quiz").classList.remove("hidden");
-
-    // Check for saved progress
-    const savedProgress = loadQuizProgress();
-    if (savedProgress && savedProgress.username === username && savedProgress.gachaMode === mode) {
-        // Load saved progress
-        currentQuestion = savedProgress.currentQuestion;
-        userProfile = savedProgress.userProfile;
-        selectedAnswerIdx = -1;
-    } else {
-        // Start new quiz
-        currentQuestion = 0;
-        userProfile = { brave: 0, smart: 0, gentle: 0, leader: 0, warm: 0, cautious: 0 };
-        selectedAnswerIdx = -1;
-    }
-
-    displayQuestion();
-}
-
 function startRandomGacha() {
     username = document.getElementById("username").value;
     if (!username) {
         alert("Isi nama dulu ya!");
-        document.getElementById("username").focus();
         return;
     }
 
+    // Set random mode
     gachaMode = "random";
     document.getElementById("home").classList.add("hidden");
     startGachaAnimation();
 }
 
-function setupQuizKeyboardNavigation() {
-    const options = document.querySelectorAll('.quiz-option');
-    let currentFocus = 0;
-
-    options.forEach((option, index) => {
-        option.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-                e.preventDefault();
-                currentFocus = (currentFocus + 1) % options.length;
-                options[currentFocus].focus();
-            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-                e.preventDefault();
-                currentFocus = (currentFocus - 1 + options.length) % options.length;
-                options[currentFocus].focus();
-            } else if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                selectAnswer(parseInt(option.getAttribute('data-index')));
-            }
-        });
-    });
-
-    if (options.length > 0) {
-        options[0].focus();
+function startQuiz(mode) {
+    username = document.getElementById("username").value;
+    if (!username) {
+        alert("Isi nama dulu ya!");
+        return;
     }
+
+    gachaMode = mode;
+    document.getElementById("home").classList.add("hidden");
+    document.getElementById("quiz").classList.remove("hidden");
+    currentQuestion = 0;
+    userProfile = { brave: 0, smart: 0, gentle: 0, leader: 0, warm: 0, cautious: 0 };
+    selectedAnswerIdx = -1;
+
+    displayQuestion();
 }
 
 function displayQuestion() {
@@ -1118,7 +728,7 @@ function displayQuestion() {
     `;
 
     q.answers.forEach((answer, idx) => {
-        html += `<div class="quiz-option" onclick="selectAnswer(${idx})" tabindex="0" data-index="${idx}">${answer.text}</div>`;
+        html += `<div class="quiz-option" onclick="selectAnswer(${idx})">${answer.text}</div>`;
     });
 
     html += `
@@ -1131,9 +741,6 @@ function displayQuestion() {
     `;
 
     quizContent.innerHTML = html;
-
-    // Add keyboard navigation for quiz options
-    setupQuizKeyboardNavigation();
 }
 
 function selectAnswer(idx) {
@@ -1159,153 +766,114 @@ function nextQuestion() {
 
     if (currentQuestion < quizQuestions.length) {
         displayQuestion();
-        saveQuizProgress();
     } else {
         startGachaAnimation();
     }
-}
 
-function previousQuestion() {
-    if (currentQuestion > 0) {
-        currentQuestion--;
-        selectedAnswerIdx = -1;
-        displayQuestion();
-    }
-}
-
-function startGachaAnimation() {
-    // Play gacha spin sound with error handling
-    try {
-        const gachaSound = new Audio('sounds/gacha.mp3');
-        gachaSound.onerror = () => console.warn('Gacha sound file not found');
-        gachaSound.play().catch(e => console.warn('Failed to play gacha sound:', e));
-    } catch (e) {
-        console.warn('Error loading gacha sound:', e);
-    }
-
-    document.getElementById("quiz").classList.add("hidden");
-    document.getElementById("gachaAnim").classList.remove("hidden");
-
-    // Animate gacha text
-    const gachaText = document.getElementById("gachaText");
-    const messages = [
-        "Sedang mencari karakter terbaik...",
-        "Menganalisis kepribadianmu...",
-        "Memproses data...",
-        "Hampir selesai...",
-        "Siap-siap melihat hasilnya!"
-    ];
-
-    let messageIndex = 0;
-    let textInterval = setInterval(() => {
-        gachaText.textContent = messages[messageIndex];
-        messageIndex = (messageIndex + 1) % messages.length;
-    }, 400);
-
-    setTimeout(() => {
-        clearInterval(textInterval);
-        rollCharacter(username);
-    }, 2000);
-}
-
-function rollCharacter(username) {
-    const result = document.getElementById("result");
-    const gacha = document.getElementById("gachaAnim");
-
-    let resultObj = findBestCharacter();
-    let char = resultObj.character;
-
-    // Track statistics
-    trackQuizStatistics(char.name, gachaMode);
-
-    document.body.style.backgroundImage = char.gender === "male" ?
-        'url("images/sunset.jpg")' :
-        char.gender === "anomali" ? 'url("images/black.jpg")' :
-        'url("images/taman_bunga.jpg")';
-
-    if (char.gender === "anomali") {
-        try {
-            const anomalyAudio = new Audio("sounds/anomali.mp3");
-            anomalyAudio.volume = 0.5;
-            anomalyAudio.onerror = () => console.warn('Anomaly sound file not found or failed to load');
-            anomalyAudio.load();
-            anomalyAudio.play().catch(e => console.warn('Failed to play anomaly sound:', e));
-        } catch (e) {
-            console.warn('Error loading anomaly sound:', e);
-        }
-    } else {
-        try {
-            const charAudio = new Audio(char.sound);
-            charAudio.volume = 0.5;
-            charAudio.onerror = () => console.warn(`Sound file for ${char.name} not found or failed to load`);
-            charAudio.load();
-            charAudio.play().catch(e => console.warn(`Failed to play sound for ${char.name}:`, e));
-        } catch (e) {
-            console.warn(`Error loading sound for ${char.name}:`, e);
+    function previousQuestion() {
+        if (currentQuestion > 0) {
+            currentQuestion--;
+            selectedAnswerIdx = -1;
+            displayQuestion();
         }
     }
 
-    // Play backsound for Robin
-    if (char.name === "Robin") {
-        const robinBacksound = new Audio("sounds/robin_sound.mp3");
-        robinBacksound.play();
-    }
+    function startGachaAnimation() {
+        // Play gacha spin sound
+        new Audio('gacha.mp3').play();
 
-    // Play backsound for Astra Yao
-    if (char.name === "Astra Yao") {
-        const astraYaoBacksound = new Audio("sounds/astra_yao_sound.mp3");
-        astraYaoBacksound.play();
-    }
+        document.getElementById("quiz").classList.add("hidden");
+        document.getElementById("gachaAnim").classList.remove("hidden");
 
+        // Animate gacha text
+        const gachaText = document.getElementById("gachaText");
+        const messages = [
+            "Sedang mencari karakter terbaik...",
+            "Menganalisis kepribadianmu...",
+            "Memproses data...",
+            "Hampir selesai...",
+            "Siap-siap melihat hasilnya!"
+        ];
 
-    createParticles(char.gender);
-    animateParticles();
+        let messageIndex = 0;
+        let textInterval = setInterval(() => {
+            gachaText.textContent = messages[messageIndex];
+            messageIndex = (messageIndex + 1) % messages.length;
+        }, 400);
 
-    // Gimmick untuk karakter anomali
-    if (char.gender === "anomali") {
-        // Shake effect
-        document.body.classList.add("shake");
         setTimeout(() => {
-            document.body.classList.remove("shake");
-        }, 500);
-
-        // Show error message
-        const errorMsg = document.getElementById("errorMessage");
-        errorMsg.style.display = "block";
-        setTimeout(() => {
-            errorMsg.style.display = "none";
+            clearInterval(textInterval);
+            rollCharacter(username);
         }, 2000);
     }
 
-    gacha.classList.add("hidden");
+    function rollCharacter(username) {
+        const result = document.getElementById("result");
+        const gacha = document.getElementById("gachaAnim");
 
-    // Show congratulatory message first
-    const congratMessage = gachaMode === "personality" ? `Selamat! Kamu mirip dengan ${char.name} ${resultObj.similarity}%!` :
-        gachaMode === "compatibility" ? `Wah, kamu cocok dengan ${char.name} ${resultObj.compatibility}%!` :
-        `Selamat! Karakter acakmu adalah ${char.name}!`;
+        let resultObj = findBestCharacter();
+        let char = resultObj.character;
 
-    result.innerHTML = `
-        <div class="congratulation-message">
-            <h1>${congratMessage}</h1>
-            <div class="loading-dots">
-                <span>.</span><span>.</span><span>.</span>
-            </div>
-        </div>
-    `;
-    result.classList.remove("hidden");
+        document.body.style.backgroundImage = char.gender === "male" ?
+            'url("images/sunset.jpg")' :
+            char.gender === "anomali" ? 'url("images/black.jpg")' :
+            'url("images/taman_bunga.jpg")';
 
-    // After 2 seconds, show the character result
-    setTimeout(() => {
-                result.innerHTML = `
+        if (char.gender === "anomali") {
+            const anomalyAudio = new Audio("sounds/anomali.mp3");
+            anomalyAudio.addEventListener('ended', () => {
+                anomalyAudio.addEventListener('ended', () => {});
+                anomalyAudio.play();
+            });
+        } else {
+            new Audio(char.sound).play();
+        }
+
+        // Play backsound for Robin
+        if (char.name === "Robin") {
+            const robinBacksound = new Audio("sounds/robin_sound.mp3");
+            robinBacksound.play();
+        }
+
+        // Play backsound for Astra Yao
+        if (char.name === "Astra Yao") {
+            const astraYaoBacksound = new Audio("sounds/astra_yao_sound.mp3");
+            astraYaoBacksound.play();
+        }
+
+
+        createParticles(char.gender);
+        animateParticles();
+
+        // Gimmick untuk karakter anomali
+        if (char.gender === "anomali") {
+            // Shake effect
+            document.body.classList.add("shake");
+            setTimeout(() => {
+                document.body.classList.remove("shake");
+            }, 500);
+
+            // Show error message
+            const errorMsg = document.getElementById("errorMessage");
+            errorMsg.style.display = "block";
+            setTimeout(() => {
+                errorMsg.style.display = "none";
+            }, 2000);
+        }
+
+        gacha.classList.add("hidden");
+        result.classList.remove("hidden");
+
+        result.innerHTML = `
         <h2>Hai, ${username}!</h2>
         <div class="char-card fadeIn">
             <div class="char-card-top">
                 <img src="${char.img}" alt="${char.name}">
                 <div class="char-info">
                     <h1>${char.name}</h1>
-                    <p id="desc" style="opacity:0;"><strong>Ciri-ciri:</strong> ${char.desc}</p>
-                    <p id="traits" style="opacity:0;"><strong>Detail:</strong> ${char.details}</p>
-                    <p id="percentages" style="opacity:0;"><strong>${gachaMode === "personality" ? `Wow, kamu mirip dengan ${char.name} ${resultObj.similarity}%!` : gachaMode === "compatibility" ? `Wow, kamu cocok dengan ${char.name} ${resultObj.compatibility}%!` : `Random pick!`}</strong></p>
+                    <p id="desc" style="opacity:0;"><strong>Deskripsi:</strong> ${char.desc}</p>
+                    <p id="traits" style="opacity:0;"><strong>Ciri-ciri:</strong> ${char.details}</p>
+                    <p id="percentages" style="opacity:0;"><strong>${gachaMode === "personality" ? `Wow, kamu mirip dengan ${char.name} ${resultObj.similarity}%!` : `Wow, kamu cocok dengan ${char.name} ${resultObj.compatibility}%!`}</strong></p>
                 </div>
             </div>
             <div class="char-card-bottom">
@@ -1333,85 +901,77 @@ function rollCharacter(username) {
             document.getElementById("words").style.opacity = 1;
             soundEffect.play();
         }, 2000);
-    }, 2000);
-}
-
-function findBestCharacter() {
-    // Check if username is mapped to a specific character
-    const lowerUsername = username.toLowerCase();
-    if (nameMapping[lowerUsername]) {
-        const mappedCharName = nameMapping[lowerUsername];
-        const mappedChar = characters.find(char => char.name === mappedCharName);
-        if (mappedChar) {
-            return { character: mappedChar, similarity: 100, compatibility: 100 };
-        }
     }
 
-    if (gachaMode === "random") {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        const randomChar = characters[randomIndex];
-        return { character: randomChar, similarity: 0, compatibility: 0 };
-    }
-
-    let bestMatch = characters[0];
-    let bestSimilarityScore = -Infinity;
-    let bestCompatibilityScore = -Infinity;
-    let bestSimilarityPerc = 0;
-    let bestCompatibilityPerc = 0;
-
-    characters.forEach(char => {
-        const traits = characterTraits[char.name] || {};
-
-        // Calculate similarity score (personality match)
-        let similarityScore = 0;
-        Object.keys(traits).forEach(trait => {
-            similarityScore += traits[trait] * (userProfile[trait] || 0) * 4;
-        });
-        const maxSimilarity = 360; // Max possible: 3 traits * 30 user max * 4 multiplier
-        const similarityPerc = Math.max(50, Math.min(100, 50 + (similarityScore / maxSimilarity) * 50));
-
-        // Calculate compatibility score (complementary traits)
-        let compatibilityScore = 0;
-        Object.keys(traits).forEach(trait => {
-            const charTrait = traits[trait] || 0;
-            const scaledUserTrait = (userProfile[trait] || 0) / 10; // Scale to 0-3 range
-            const difference = Math.abs(charTrait - scaledUserTrait);
-            if (difference >= 1) {
-                compatibilityScore += (3 - difference) * 2;
-            } else if (difference === 0) {
-                compatibilityScore += 1;
-            }
-        });
-        const maxCompatibility = 24; // Max score as per original calculation
-        const compatibilityPerc = Math.max(50, Math.min(100, 50 + (compatibilityScore / maxCompatibility) * 50));
-
-        // Add randomness
-        similarityScore += Math.random() * 5;
-        compatibilityScore += Math.random() * 5;
-
-        // Determine best match based on mode
-        if (gachaMode === "personality") {
-            if (similarityScore > bestSimilarityScore) {
-                bestSimilarityScore = similarityScore;
-                bestMatch = char;
-                bestSimilarityPerc = similarityPerc;
-                bestCompatibilityPerc = compatibilityPerc;
-            }
-        } else if (gachaMode === "compatibility") {
-            if (compatibilityScore > bestCompatibilityScore) {
-                bestCompatibilityScore = compatibilityScore;
-                bestMatch = char;
-                bestSimilarityPerc = similarityPerc;
-                bestCompatibilityPerc = compatibilityPerc;
+    function findBestCharacter() {
+        // Check if username is mapped to a specific character
+        const lowerUsername = username.toLowerCase();
+        if (nameMapping[lowerUsername]) {
+            const mappedCharName = nameMapping[lowerUsername];
+            const mappedChar = characters.find(char => char.name === mappedCharName);
+            if (mappedChar) {
+                return { character: mappedChar, similarity: 100, compatibility: 100 };
             }
         }
-    });
 
-    return {
-        character: bestMatch,
-        similarity: Math.round(bestSimilarityPerc),
-        compatibility: Math.round(bestCompatibilityPerc)
-    };
+        let bestMatch = characters[0];
+        let bestSimilarityScore = -Infinity;
+        let bestCompatibilityScore = -Infinity;
+        let bestSimilarityPerc = 0;
+        let bestCompatibilityPerc = 0;
+
+        characters.forEach(char => {
+            const traits = characterTraits[char.name] || {};
+
+            // Calculate similarity score (personality match)
+            let similarityScore = 0;
+            Object.keys(traits).forEach(trait => {
+                similarityScore += traits[trait] * (userProfile[trait] || 0);
+            });
+            const similarityPerc = (similarityScore / 540) * 100; // Max score 540
+
+            // Calculate compatibility score (complementary traits)
+            let compatibilityScore = 0;
+            Object.keys(traits).forEach(trait => {
+                const charTrait = traits[trait] || 0;
+                const scaledUserTrait = (userProfile[trait] || 0) / 10; // Scale to 0-3 range
+                const difference = Math.abs(charTrait - scaledUserTrait);
+                if (difference >= 1) {
+                    compatibilityScore += (3 - difference) * 2;
+                } else if (difference === 0) {
+                    compatibilityScore += 1;
+                }
+            });
+            const compatibilityPerc = (compatibilityScore / 24) * 100; // Max score 24
+
+            // Add randomness
+            similarityScore += Math.random() * 5;
+            compatibilityScore += Math.random() * 5;
+
+            // Determine best match based on mode
+            if (gachaMode === "personality") {
+                if (similarityScore > bestSimilarityScore) {
+                    bestSimilarityScore = similarityScore;
+                    bestMatch = char;
+                    bestSimilarityPerc = similarityPerc;
+                    bestCompatibilityPerc = compatibilityPerc;
+                }
+            } else if (gachaMode === "compatibility") {
+                if (compatibilityScore > bestCompatibilityScore) {
+                    bestCompatibilityScore = compatibilityScore;
+                    bestMatch = char;
+                    bestSimilarityPerc = similarityPerc;
+                    bestCompatibilityPerc = compatibilityPerc;
+                }
+            }
+        });
+
+        return {
+            character: bestMatch,
+            similarity: Math.round(bestSimilarityPerc),
+            compatibility: Math.round(bestCompatibilityPerc)
+        };
+    }
 }
 
 function createParticles(gender) {
@@ -1448,69 +1008,6 @@ function loadNameMappingsFromStorage() {
         const customMappings = JSON.parse(stored);
         Object.assign(nameMapping, customMappings);
     }
-}
-
-function saveQuizProgress() {
-    const progress = {
-        username,
-        currentQuestion,
-        userProfile,
-        gachaMode
-    };
-    localStorage.setItem('quizProgress', JSON.stringify(progress));
-}
-
-function loadQuizProgress() {
-    const stored = localStorage.getItem('quizProgress');
-    if (stored) {
-        return JSON.parse(stored);
-    }
-    return null;
-}
-
-function trackQuizStatistics(characterName, mode) {
-    const statsKey = 'quizStatistics';
-    let stats = JSON.parse(localStorage.getItem(statsKey)) || {
-        totalQuizzes: 0,
-        resultsByCharacter: {},
-        modeUsage: { personality: 0, compatibility: 0 }
-    };
-
-    stats.totalQuizzes++;
-    stats.resultsByCharacter[characterName] = (stats.resultsByCharacter[characterName] || 0) + 1;
-    stats.modeUsage[mode]++;
-
-    localStorage.setItem(statsKey, JSON.stringify(stats));
-}
-
-function displayStatistics() {
-    const stats = JSON.parse(localStorage.getItem('quizStatistics')) || {
-        totalQuizzes: 0,
-        resultsByCharacter: {},
-        modeUsage: { personality: 0, compatibility: 0 }
-    };
-
-    const content = document.getElementById("statisticsContent");
-    if (stats.totalQuizzes === 0) {
-        content.innerHTML = `
-            <h4>Total Quiz: ${stats.totalQuizzes}</h4>
-            <p>Belum ada quiz yang dilakukan. Mulai quiz untuk melihat statistik!</p>
-        `;
-    } else {
-        content.innerHTML = `
-            <h4>Total Quiz: ${stats.totalQuizzes}</h4>
-            <h4>Mode Usage:</h4>
-            <ul>
-                <li>Personality: ${stats.modeUsage.personality}</li>
-                <li>Compatibility: ${stats.modeUsage.compatibility}</li>
-            </ul>
-            <h4>Results by Character:</h4>
-            <ul>
-                ${Object.entries(stats.resultsByCharacter).map(([char, count]) => `<li>${char}: ${count}</li>`).join('')}
-            </ul>
-        `;
-    }
-    content.classList.remove("hidden");
 }
 
 function populateCharacterSelect() {
@@ -1594,136 +1091,13 @@ function loadCharactersFromStorage() {
     }
 }
 
-const ADMIN_PASSWORD = "l"; // Change this to your desired password
-
 function openAdmin() {
     document.getElementById("home").classList.add("hidden");
     document.getElementById("adminPanel").classList.remove("hidden");
-    switchAdminTab('characters');
+    refreshCharacterList();
+    populateCharacterSelect();
+    refreshNameMappingList();
 }
-
-// Tambahkan fungsi untuk membuka tab import secara langsung
-function openImportTab() {
-    const password = prompt("Enter admin password:");
-    if (password !== ADMIN_PASSWORD) {
-        alert("Wrong password!");
-        return;
-    }
-
-    document.getElementById("home").classList.add("hidden");
-    document.getElementById("adminPanel").classList.remove("hidden");
-    switchAdminTab('import');
-}
-
-function switchAdminTab(tab) {
-    // Update nav buttons
-    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(`nav${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
-
-    const formSection = document.getElementById("adminForm");
-    const listSection = document.getElementById("adminList");
-
-    if (tab === 'characters') {
-        formSection.innerHTML = `
-            <h3>Tambah/Edit Karakter</h3>
-            <input type="text" id="charName" placeholder="Nama Karakter" />
-            <select id="charGender">
-                <option value="">Pilih Gender</option>
-                <option value="male">Laki-laki</option>
-                <option value="female">Perempuan</option>
-                <option value="anomali">Anomali</option>
-            </select>
-            <input type="text" id="charImg" placeholder="Path Gambar (images/...)" />
-            <input type="text" id="charSound" placeholder="Path Suara (sounds/...)" />
-            <input type="text" id="charDesc" placeholder="Deskripsi Singkat" />
-            <textarea id="charDetails" placeholder="Deskripsi Lengkap"></textarea>
-            <input type="text" id="charWords" placeholder="Kata-kata" />
-            <h4>Trait (0-3):</h4>
-            <div class="trait-inputs">
-                <label>Brave: <input type="number" id="traitBrave" min="0" max="3" value="0" /></label>
-                <label>Smart: <input type="number" id="traitSmart" min="0" max="3" value="0" /></label>
-                <label>Gentle: <input type="number" id="traitGentle" min="0" max="3" value="0" /></label>
-                <label>Leader: <input type="number" id="traitLeader" min="0" max="3" value="0" /></label>
-                <label>Warm: <input type="number" id="traitWarm" min="0" max="3" value="0" /></label>
-                <label>Cautious: <input type="number" id="traitCautious" min="0" max="3" value="0" /></label>
-            </div>
-            <button id="addCharBtn" onclick="addCharacter()">Tambah Karakter</button>
-
-            <!-- TAMBAHKAN BUTTON UNTUK LOAD DARI CHARACTERS.JSON -->
-            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
-                <h4>Import dari characters.json</h4>
-                <button onclick="loadCharactersFromJSONFile()" style="width: 100%; background: #2ecc71; margin-bottom: 10px;">📁 Load dari characters.json</button>
-                <small style="color: #666; display: block; margin-bottom: 10px;">Muat karakter dari file characters.json yang sudah disediakan</small>
-            </div>
-        `;
-        listSection.innerHTML = '<h3>Daftar Karakter</h3><div id="characterList" class="character-list"></div>';
-        refreshCharacterList();
-        populateCharacterSelect();
-    } else if (tab === 'mappings') {
-        formSection.innerHTML = `
-            <h3>Tambah Mapping Nama</h3>
-            <input type="text" id="mapName" placeholder="Nama" />
-            <select id="mapCharacter">
-                <option value="">Pilih Karakter</option>
-            </select>
-            <button onclick="addNameMapping()">Tambah Mapping</button>
-        `;
-        listSection.innerHTML = '<h3>Daftar Mapping</h3><div id="nameMappingList" class="mapping-list"></div>';
-        populateCharacterSelect();
-        refreshNameMappingList();
-    } else if (tab === 'stats') {
-        formSection.innerHTML = '<h3>Statistik Quiz</h3>';
-        listSection.innerHTML = '<div id="statisticsContent" class="statistics-content"></div>';
-        displayStatistics();
-    } else if (tab === 'import') {
-        formSection.innerHTML = `
-            <h3>📁 Import & Export Karakter</h3>
-
-            <!-- SECTION 1: IMPORT -->
-            <div class="import-section">
-                <h4>Import dari File JSON</h4>
-                <input type="file" id="jsonFileInput" accept=".json" style="width: 100%; padding: 10px; margin: 10px 0;">
-                <button onclick="importCharactersFromJSON()" style="width: 100%; background: #3498db;">Import Karakter</button>
-                <small style="color: #666;">Upload file JSON dengan format yang benar</small>
-            </div>
-
-            <!-- SECTION 2: DOWNLOAD TEMPLATE -->
-            <div class="import-section" style="margin-top: 20px;">
-                <h4>Download Template</h4>
-                <button onclick="downloadTemplate()" style="width: 100%; background: #9b59b6;">📥 Download Template JSON</button>
-                <small style="color: #666;">Template untuk membuat karakter baru</small>
-            </div>
-
-            <!-- SECTION 3: EXPORT BACKUP -->
-            <div class="import-section" style="margin-top: 20px;">
-                <h4>Export Backup</h4>
-                <button onclick="exportCharactersToJSON()" style="width: 100%; background: #27ae60;">📤 Export Semua Karakter</button>
-                <small style="color: #666;">Simpan semua karakter ke file JSON</small>
-            </div>
-
-            <!-- SECTION 4: RESET DATA -->
-            <div class="import-section" style="margin-top: 20px;">
-                <h4>Reset Data</h4>
-                <button onclick="resetToDefault()" style="width: 100%; background: #e74c3c;">🗑️ Reset ke Default</button>
-                <small style="color: #666;">Hapus semua karakter custom (karakter default tetap)</small>
-            </div>
-
-            <!-- SECTION 5: SETTINGS -->
-            <div class="import-section" style="margin-top: 20px;">
-                <h4>Pengaturan Tampilan</h4>
-                <div style="display: flex; gap: 10px; margin: 10px 0;">
-                    <button onclick="toggleBrowseFeature()" style="width: 100%; background: #ff9800;">👁️ ${getBrowseFeatureStatus() ? 'Sembunyikan' : 'Tampilkan'} Jelajahi Karakter</button>
-                </div>
-                <small style="color: #666;">Aktifkan/nonaktifkan fitur jelajahi karakter di halaman utama</small>
-                <p id="browseFeatureStatus" style="margin-top: 10px; font-size: 0.9em; color: #333;">
-                    Status: <strong>${getBrowseFeatureStatus() ? 'Aktif' : 'Nonaktif'}</strong>
-                </p>
-            </div>
-        `;
-        listSection.innerHTML = '<h3>Status Import</h3><div id="importStatus"></div>';
-    }
-}
-
 
 function closeAdmin() {
     document.getElementById("adminPanel").classList.add("hidden");
@@ -1921,457 +1295,7 @@ function editCharacter(name) {
     document.getElementById("addCharBtn").textContent = "Update Karakter";
 }
 
-function showAdminMessage(message, isError = false) {
-    const messageDiv = document.getElementById('adminMessage');
-    messageDiv.textContent = message;
-    messageDiv.style.borderColor = isError ? '#f44336' : '#4CAF50';
-    messageDiv.style.display = 'block';
-    setTimeout(() => {
-        messageDiv.style.display = 'none';
-    }, 3000);
-}
-
-// ===== FUNGSI IMPORT KARAKTER DARI FILE JSON =====
-function handleFileImport(event) {
-    const file = event.target.files[0];
-    if (!file) {
-        showAdminMessage("Tidak ada file yang dipilih!", true);
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const newCharacters = JSON.parse(e.target.result);
-            if (!Array.isArray(newCharacters)) {
-                showAdminMessage("Format JSON tidak valid! Harus berupa array.", true);
-                return;
-            }
-
-            let importedCount = 0;
-            let skippedCount = 0;
-            
-            newCharacters.forEach(char => {
-                // Validasi field yang diperlukan
-                if (!char.name || !char.gender || !char.desc || !char.details || !char.words) {
-                    console.warn(`Karakter ${char.name || 'tanpa nama'} dilewati: field wajib tidak lengkap`);
-                    skippedCount++;
-                    return;
-                }
-
-                // Set default values jika tidak ada
-                const img = char.img?.startsWith("images/") ? char.img : `images/${char.img || `${char.name.toLowerCase().replace(/ /g, '_')}.png`}`;
-                const sound = char.sound?.startsWith("sounds/") ? char.sound : `sounds/${char.sound || `${char.name.toLowerCase().replace(/ /g, '_')}.mp3`}`;
-                
-                const traits = char.traits || {
-                    brave: parseInt(char.brave) || 0,
-                    smart: parseInt(char.smart) || 0,
-                    gentle: parseInt(char.gentle) || 0,
-                    leader: parseInt(char.leader) || 0,
-                    warm: parseInt(char.warm) || 0,
-                    cautious: parseInt(char.cautious) || 0
-                };
-
-                // Cek duplikat
-                const isDuplicate = characters.some(c => c.name === char.name);
-                if (!isDuplicate) {
-                    characters.push({
-                        name: char.name,
-                        gender: char.gender,
-                        img: img,
-                        desc: char.desc,
-                        details: char.details,
-                        words: char.words,
-                        sound: sound
-                    });
-                    
-                    characterTraits[char.name] = traits;
-                    importedCount++;
-                } else {
-                    skippedCount++;
-                }
-            });
-
-            // Simpan ke localStorage
-            let stored = localStorage.getItem("customCharacters");
-            const customChars = stored ? JSON.parse(stored) : [];
-            
-            newCharacters.forEach(char => {
-                const isDuplicateCustom = customChars.some(c => c.name === char.name);
-                const isDuplicateDefault = characters.slice(0, characters.length - importedCount).some(c => c.name === char.name);
-                
-                if (!isDuplicateCustom && !isDuplicateDefault) {
-                    const img = char.img?.startsWith("images/") ? char.img : `images/${char.img || `${char.name.toLowerCase().replace(/ /g, '_')}.png`}`;
-                    const sound = char.sound?.startsWith("sounds/") ? char.sound : `sounds/${char.sound || `${char.name.toLowerCase().replace(/ /g, '_')}.mp3`}`;
-                    
-                    customChars.push({
-                        name: char.name,
-                        gender: char.gender,
-                        img: img,
-                        desc: char.desc,
-                        details: char.details,
-                        words: char.words,
-                        sound: sound
-                    });
-
-                    let storedTraits = localStorage.getItem("customTraits");
-                    const customTraits = storedTraits ? JSON.parse(storedTraits) : {};
-                    const traits = char.traits || {
-                        brave: parseInt(char.brave) || 0,
-                        smart: parseInt(char.smart) || 0,
-                        gentle: parseInt(char.gentle) || 0,
-                        leader: parseInt(char.leader) || 0,
-                        warm: parseInt(char.warm) || 0,
-                        cautious: parseInt(char.cautious) || 0
-                    };
-                    customTraits[char.name] = traits;
-                    localStorage.setItem("customTraits", JSON.stringify(customTraits));
-                }
-            });
-
-            localStorage.setItem("customCharacters", JSON.stringify(customChars));
-            showAdminMessage(`Import berhasil! ${importedCount} karakter ditambahkan, ${skippedCount} dilewati.`);
-            
-            // Reset file input
-            document.getElementById('jsonFileInput').value = '';
-            refreshCharacterList();
-            displayBrowseCharacters();
-        } catch (error) {
-            showAdminMessage(`Error parsing JSON: ${error.message}`, true);
-            console.error('Error importing characters:', error);
-        }
-    };
-    reader.readAsText(file);
-}
-
-function addImportFunctionalityToAdmin() {
-    // Tambah import button ke form admin
-    const adminForm = document.getElementById('adminForm');
-    if (adminForm) {
-        const importSection = document.createElement('div');
-        importSection.classList.add('import-section');
-        importSection.innerHTML = `
-            <h4>Import Karakter dari File JSON</h4>
-            <p>Upload file JSON dengan format seperti character_template.json</p>
-            <div style="display: flex; gap: 10px; margin: 10px 0;">
-                <button onclick="document.getElementById('jsonFileInput').click()">📁 Import dari File</button>
-                <button onclick="downloadCharacterTemplate()">📥 Download Template</button>
-                <button onclick="exportCharactersToJSON()">📤 Export Semua Karakter</button>
-            </div>
-            <small style="display: block; margin-top: 10px; color: #666;">
-                Gunakan template yang sudah disediakan untuk memformat karakter dengan benar.
-            </small>
-        `;
-
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.id = 'jsonFileInput';
-        fileInput.accept = '.json';
-        fileInput.style.display = 'none';
-        fileInput.addEventListener('change', handleFileImport);
-
-        adminForm.appendChild(importSection);
-        adminForm.appendChild(fileInput);
-    }
-}
-
-function downloadCharacterTemplate() {
-    const template = `[
-  {
-    "name": "Nama Karakter",
-    "gender": "male/female/anomali",
-    "img": "images/nama_file.png",
-    "desc": "Deskripsi singkat karakter",
-    "details": "Deskripsi lengkap karakter yang menjelaskan kepribadian dan latar belakangnya secara detail.",
-    "words": "Kata-kata khas karakter",
-    "sound": "sounds/nama_file.mp3",
-    "traits": {
-      "brave": 0,
-      "smart": 0,
-      "gentle": 0,
-      "leader": 0,
-      "warm": 0,
-      "cautious": 0
-    }
-  }
-]`;
-    
-    const blob = new Blob([template], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'character_template.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    showAdminMessage("Template berhasil didownload! Silahkan edit file JSON tersebut.");
-}
-
-function exportCharactersToJSON() {
-    const exportData = characters.map(char => {
-        const traits = characterTraits[char.name] || {};
-        return {
-            name: char.name,
-            gender: char.gender,
-            img: char.img,
-            desc: char.desc,
-            details: char.details,
-            words: char.words,
-            sound: char.sound,
-            traits: traits
-        };
-    });
-    
-    const jsonStr = JSON.stringify(exportData, null, 2);
-    const blob = new Blob([jsonStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'characters_export.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    showAdminMessage("Export berhasil! Semua karakter tersimpan di file characters_export.json");
-}
-
-// Initialize import functionality
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        addImportFunctionalityToAdmin();
-    }, 100);
-});
-
-
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-});
-
-// ========== FUNGSI IMPORT/EXPORT ==========
-
-function importCharactersFromJSON() {
-    const fileInput = document.getElementById('jsonFileInput');
-    const file = fileInput.files[0];
-    
-    if (!file) {
-        showAdminMessage("Pilih file JSON dulu!", true);
-        return;
-    }
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const importedChars = JSON.parse(e.target.result);
-            if (!Array.isArray(importedChars)) {
-                showAdminMessage("Format JSON salah! Harus array", true);
-                return;
-            }
-            
-            let added = 0;
-            let skipped = 0;
-            
-            // Load existing custom characters
-            let storedChars = localStorage.getItem("customCharacters");
-            let customChars = storedChars ? JSON.parse(storedChars) : [];
-            let storedTraits = localStorage.getItem("customTraits");
-            let customTraits = storedTraits ? JSON.parse(storedTraits) : {};
-            
-            importedChars.forEach(newChar => {
-                // Validasi minimal
-                if (!newChar.name || !newChar.gender || !newChar.desc) {
-                    skipped++;
-                    return;
-                }
-                
-                // Cek duplikat
-                const isDuplicate = characters.some(c => c.name === newChar.name);
-                if (isDuplicate) {
-                    skipped++;
-                    return;
-                }
-                
-                // Format data
-                const formattedChar = {
-                    name: newChar.name.trim(),
-                    gender: newChar.gender,
-                    img: newChar.img?.startsWith('images/') ? newChar.img : `images/${newChar.img || 'default.png'}`,
-                    desc: newChar.desc,
-                    details: newChar.details || newChar.desc,
-                    words: newChar.words || newChar.desc,
-                    sound: newChar.sound?.startsWith('sounds/') ? newChar.sound : `sounds/${newChar.sound || 'default.mp3'}`
-                };
-                
-                // Tambah ke array
-                characters.push(formattedChar);
-                customChars.push(formattedChar);
-                
-                // Handle traits
-                const traits = newChar.traits || {
-                    brave: newChar.brave || 0,
-                    smart: newChar.smart || 0,
-                    gentle: newChar.gentle || 0,
-                    leader: newChar.leader || 0,
-                    warm: newChar.warm || 0,
-                    cautious: newChar.cautious || 0
-                };
-                
-                characterTraits[newChar.name] = traits;
-                customTraits[newChar.name] = traits;
-                
-                added++;
-            });
-            
-            // Simpan ke localStorage
-            localStorage.setItem("customCharacters", JSON.stringify(customChars));
-            localStorage.setItem("customTraits", JSON.stringify(customTraits));
-            
-            // Reset file input
-            fileInput.value = '';
-            
-            // Refresh tampilan
-            refreshCharacterList();
-            showAdminMessage(`✅ Import berhasil! ${added} karakter ditambahkan, ${skipped} dilewati.`);
-            
-        } catch (error) {
-            showAdminMessage(`❌ Error: ${error.message}`, true);
-        }
-    };
-    
-    reader.readAsText(file);
-}
-
-function downloadTemplate() {
-    const template = [
-        {
-            "name": "Nama Karakter Baru",
-            "gender": "male",
-            "img": "images/karakter_baru.png",
-            "desc": "Deskripsi singkat karakter",
-            "details": "Deskripsi lengkap karakter...",
-            "words": "Kata-kata khas karakter",
-            "sound": "sounds/karakter_baru.mp3",
-            "traits": {
-                "brave": 2,
-                "smart": 1,
-                "gentle": 0,
-                "leader": 1,
-                "warm": 3,
-                "cautious": 0
-            }
-        }
-    ];
-    
-    const jsonStr = JSON.stringify(template, null, 2);
-    const blob = new Blob([jsonStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'character_template.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    showAdminMessage("📥 Template berhasil didownload!");
-}
-
-function exportCharactersToJSON() {
-    const exportData = characters.map(char => {
-        const traits = characterTraits[char.name] || {};
-        return {
-            name: char.name,
-            gender: char.gender,
-            img: char.img,
-            desc: char.desc,
-            details: char.details,
-            words: char.words,
-            sound: char.sound,
-            traits: traits
-        };
-    });
-    
-    const jsonStr = JSON.stringify(exportData, null, 2);
-    const blob = new Blob([jsonStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `characters_backup_${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    showAdminMessage(`📤 Export berhasil! ${characters.length} karakter tersimpan.`);
-}
-
-function resetToDefault() {
-    if (!confirm("HAPUS SEMUA KARAKTER CUSTOM?\nKarakter default tetap aman.")) {
-        return;
-    }
-
-    // Hanya hapus karakter custom dari localStorage
-    localStorage.removeItem("customCharacters");
-    localStorage.removeItem("customTraits");
-
-    // Reset array characters ke default (hardcoded)
-    // Anda perlu mendefinisikan ulang array characters dengan karakter default saja
-    // Atau reload halaman
-    location.reload();
-
-    showAdminMessage("✅ Data karakter custom telah direset!");
-}
-
-// Fungsi untuk toggle fitur jelajahi karakter
-function toggleBrowseFeature() {
-    const currentStatus = getBrowseFeatureStatus();
-    const newStatus = !currentStatus;
-
-    // Simpan status ke localStorage
-    localStorage.setItem('browseFeatureEnabled', newStatus);
-
-    // Update UI
-    updateBrowseFeatureUI();
-
-    // Tampilkan pesan
-    showAdminMessage(`✅ Fitur Jelajahi Karakter ${newStatus ? 'diaktifkan' : 'dinonaktifkan'}`);
-
-    // Refresh halaman untuk menerapkan perubahan
-    setTimeout(() => {
-        location.reload();
-    }, 1000);
-}
-
-function getBrowseFeatureStatus() {
-    // Default adalah true (aktif)
-    const status = localStorage.getItem('browseFeatureEnabled');
-    return status !== 'false'; // Jika null atau 'true', return true
-}
-
-function updateBrowseFeatureUI() {
-    const status = getBrowseFeatureStatus();
-    const statusElement = document.getElementById('browseFeatureStatus');
-    const toggleButton = document.querySelector('[onclick="toggleBrowseFeature()"]');
-
-    if (statusElement) {
-        statusElement.innerHTML = `Status: <strong>${status ? 'Aktif' : 'Nonaktif'}</strong>`;
-    }
-
-    if (toggleButton) {
-        toggleButton.textContent = `👁️ ${status ? 'Sembunyikan' : 'Tampilkan'} Jelajahi Karakter`;
-    }
-}
-
-// Panggil updateBrowseFeatureUI saat halaman dimuat
-window.addEventListener('load', () => {
-    updateBrowseFeatureUI();
-
-    // Sembunyikan tombol jelajahi karakter jika fitur dinonaktifkan
-    const browseButton = document.querySelector('[onclick="openBrowse()"]');
-    if (browseButton) {
-        browseButton.style.display = getBrowseFeatureStatus() ? '' : 'none';
-    }
 });
