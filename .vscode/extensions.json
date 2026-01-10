@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "tonybaloney.vscode-pets",
-        "kingleo.deepseek-web"
+        "kingleo.deepseek-web",
+        "github.copilot"
     ]
 }

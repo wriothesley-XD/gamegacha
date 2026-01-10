@@ -1,4 +1,699 @@
-const characters = [{
+const canvas = document.getElementById("particleCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let particles = [];
+
+let userProfile = {};
+let currentQuestion = 0;
+let username = "";
+let selectedAnswerIdx = -1;
+let gachaMode = "personality"; // "personality" atau "compatibility"
+let browseCurrentPage = 1;
+const itemsPerPage = 8;
+
+document.getElementById("adminBtn").addEventListener("click", openAdmin);
+
+function openBrowse() {
+    document.getElementById("home").classList.add("hidden");
+    document.getElementById("browsePanel").classList.remove("hidden");
+    displayBrowseCharacters();
+}
+
+function closeBrowse() {
+    document.getElementById("browsePanel").classList.add("hidden");
+    document.getElementById("home").classList.remove("hidden");
+}
+
+function openTutorial() {
+    document.getElementById("tutorialModal").classList.remove("hidden");
+}
+
+function closeTutorial() {
+    document.getElementById("tutorialModal").classList.add("hidden");
+}
+
+function displayBrowseCharacters() {
+    const page = arguments.length ? arguments[0] : browseCurrentPage;
+    browseCurrentPage = page;
+
+    const list = document.getElementById("browseCharacterList");
+    const paginationEl = document.getElementById("pagination");
+    list.innerHTML = "";
+
+    const searchTerm = (document.getElementById("searchName")?.value || "").toLowerCase();
+    const genderFilter = document.getElementById("filterGender")?.value || "";
+    const traitFilter = document.getElementById("filterTrait")?.value || "";
+
+    const filtered = characters.filter(char => {
+        if (!char || !char.name) return false;
+        const matchesSearch = char.name.toLowerCase().includes(searchTerm) || (char.desc && char.desc.toLowerCase().includes(searchTerm));
+        const matchesGender = !genderFilter || char.gender === genderFilter;
+        const traits = characterTraits[char.name] || {};
+        const matchesTrait = !traitFilter || (traits[traitFilter] && traits[traitFilter] > 0);
+        return matchesSearch && matchesGender && matchesTrait;
+    });
+
+    const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+    const start = (browseCurrentPage - 1) * itemsPerPage;
+    const pageItems = filtered.slice(start, start + itemsPerPage);
+
+    // render grid
+    const grid = document.createElement('div');
+    grid.className = 'browse-grid-container';
+
+    pageItems.forEach(char => {
+        const traits = characterTraits[char.name] || {};
+        const traitText = Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${k}: ${v}`).join(', ') || 'N/A';
+
+        const card = document.createElement('div');
+        card.className = 'character-card';
+        card.innerHTML = `
+            <img src="${char.img}" alt="${char.name}" style="width:100%;aspect-ratio:1/1;object-fit:cover;" onerror="this.style.display='none'">
+            <div class="desc">
+                <div class="name">${char.name}</div>
+                <div class="gender ${char.gender}">${char.gender === 'male' ? '♂' : char.gender === 'anomali' ? '⚠' : '♀'}</div>
+                <div class="short-desc">${char.desc || ''}</div>
+            </div>
+            <button class="view-btn" onclick="viewCharacter('${char.name}')">Lihat</button>
+        `;
+
+        grid.appendChild(card);
+    });
+
+    list.appendChild(grid);
+
+    // pagination
+    paginationEl.innerHTML = '';
+    if (totalPages > 1) {
+        const prev = document.createElement('button');
+        prev.textContent = '‹';
+        prev.disabled = browseCurrentPage <= 1;
+        prev.onclick = () => displayBrowseCharacters(browseCurrentPage - 1);
+        paginationEl.appendChild(prev);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = i;
+            btn.className = (i === browseCurrentPage) ? 'active' : '';
+            btn.onclick = () => displayBrowseCharacters(i);
+            paginationEl.appendChild(btn);
+        }
+
+        const next = document.createElement('button');
+        next.textContent = '›';
+        next.disabled = browseCurrentPage >= totalPages;
+        next.onclick = () => displayBrowseCharacters(browseCurrentPage + 1);
+        paginationEl.appendChild(next);
+    }
+}
+
+function filterCharacters() {
+    // reuse displayBrowseCharacters with page reset
+    displayBrowseCharacters(1);
+}
+
+function viewCharacter(name) {
+    const char = characters.find(c => c.name === name);
+    if (!char) return;
+
+    const traits = characterTraits[name];
+    const traitText = traits ? Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${k}: ${v}`).join(", ") : "N/A";
+
+    document.getElementById("result").innerHTML = `
+        <h2>Detail Karakter</h2>
+        <div class="char-card fadeIn">
+            <div class="char-card-top">
+                <img src="${char.img}" alt="${char.name}">
+                <div class="char-info">
+                    <h1>${char.name}</h1>
+                    <p><strong>Gender:</strong> ${char.gender === "male" ? "Laki-laki" : char.gender === "anomali" ? "Anomali" : "Perempuan"}</p>
+                    <p><strong>Ciri-ciri:</strong> ${char.desc}</p>
+                    <p><strong>Deskripsi:</strong> ${char.details}</p>
+                    <p><strong>Trait:</strong> ${traitText}</p>
+                </div>
+            </div>
+            <div class="char-card-bottom">
+                <img src="${char.img}" alt="${char.name}">
+                <p class="char-words">"${char.words}"</p>
+            </div>
+        </div>
+        <button onclick="closeCharacterView()">← Kembali ke Jelajah</button>
+    `;
+
+    document.getElementById("browsePanel").classList.add("hidden");
+    document.getElementById("result").classList.remove("hidden");
+}
+
+function closeCharacterView() {
+    document.getElementById("result").classList.add("hidden");
+    document.getElementById("browsePanel").classList.remove("hidden");
+}
+
+// Load karakter dari localStorage saat halaman muat
+// On load: try to load external characters JSON (user-editable). If corrupted,
+// fall back to bundled `characters_fixed.json`. Then load localStorage data.
+window.addEventListener("load", async () => {
+    await loadExternalCharacters();
+    loadCharactersFromStorage();
+    loadNameMappingsFromStorage();
+});
+
+async function loadExternalCharacters() {
+    // Try primary characters.json first
+    try {
+        const res = await fetch('characters.json', { cache: 'no-store' });
+        if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0 && data.some(c => c && c.name && c.img)) {
+                // Replace runtime characters with external file
+                characters = data.map(c => ({
+                    name: c.name || '',
+                    gender: c.gender || 'female',
+                    img: c.img || '',
+                    desc: c.desc || '',
+                    details: c.details || '',
+                    words: c.words || '',
+                    sound: c.sound || ''
+                }));
+
+                // If traits provided in file, sync into characterTraits
+                data.forEach(c => {
+                    if (c && c.name && c.traits) characterTraits[c.name] = c.traits;
+                });
+                return;
+            }
+        }
+    } catch (e) {
+        console.warn('Failed to load characters.json, will try fallback.', e);
+    }
+
+    // Fallback to characters_fixed.json if available
+    try {
+        const res2 = await fetch('characters_fixed.json', { cache: 'no-store' });
+        if (res2.ok) {
+            const data2 = await res2.json();
+            if (Array.isArray(data2) && data2.length > 0) {
+                characters = data2.map(c => ({
+                    name: c.name || '',
+                    gender: c.gender || 'female',
+                    img: c.img || '',
+                    desc: c.desc || '',
+                    details: c.details || '',
+                    words: c.words || '',
+                    sound: c.sound || ''
+                }));
+                data2.forEach(c => {
+                    if (c && c.name && c.traits) characterTraits[c.name] = c.traits;
+                });
+                return;
+            }
+        }
+    } catch (e) {
+        console.warn('Failed to load characters_fixed.json fallback.', e);
+    }
+
+    // If both attempts fail, keep built-in `characters` defined later in file.
+}
+
+function startRandomGacha(mode) {
+    username = document.getElementById("username").value;
+    const messageEl = document.getElementById('message');
+    if (!username) {
+        if (messageEl) messageEl.textContent = 'Isi nama dulu ya!';
+        else alert('Isi nama dulu ya!');
+        return;
+    }
+    if (messageEl) messageEl.textContent = '';
+
+    // allow caller to set mode (compatibility/personality/random)
+    gachaMode = mode || 'random';
+    document.getElementById("home").classList.add("hidden");
+    startGachaAnimation();
+}
+
+function startQuiz(mode) {
+    username = document.getElementById("username").value;
+    if (!username) {
+        alert("Isi nama dulu ya!");
+        return;
+    }
+
+    gachaMode = mode;
+    document.getElementById("home").classList.add("hidden");
+    document.getElementById("quiz").classList.remove("hidden");
+    currentQuestion = 0;
+    userProfile = { brave: 0, smart: 0, gentle: 0, leader: 0, warm: 0, cautious: 0 };
+    selectedAnswerIdx = -1;
+
+    displayQuestion();
+}
+
+function displayQuestion() {
+    const quizContent = document.getElementById("quizContent");
+    const q = quizQuestions[currentQuestion];
+    const modeTitle = gachaMode === "personality" ? "🔍 Kamu Mirip Siapa?" : "💕 Pasangan Mu?";
+
+    let html = `
+        <div class="quiz-mode-title">${modeTitle}</div>
+        <div class="quiz-progress">Pertanyaan ${currentQuestion + 1} dari ${quizQuestions.length}</div>
+        <div class="quiz-question large">
+            <div class="quiz-question-header">
+                <h3>${q.question}</h3>
+                <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${Math.round(((currentQuestion)/quizQuestions.length)*100)}%"></div></div>
+            </div>
+            <div class="quiz-options">
+    `;
+
+    q.answers.forEach((answer, idx) => {
+        // use button-like div for larger clickable area
+        html += `<button class="quiz-option" onclick="selectAnswer(${idx})" aria-pressed="false">${answer.text}</button>`;
+    });
+
+    html += `
+            </div>
+        </div>
+        <div class="quiz-button-group">
+            <button onclick="previousQuestion()" ${currentQuestion === 0 ? 'disabled' : ''}>← Sebelumnya</button>
+            <button onclick="nextQuestion()" id="nextBtn">Selanjutnya →</button>
+        </div>
+    `;
+
+    quizContent.innerHTML = html;
+}
+
+function selectAnswer(idx) {
+    selectedAnswerIdx = idx;
+    document.querySelectorAll(".quiz-option").forEach((el, i) => {
+        const pressed = i === idx;
+        el.classList.toggle("selected", pressed);
+        el.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+    });
+}
+
+function nextQuestion() {
+    if (selectedAnswerIdx === -1) {
+        alert("Pilih jawaban dulu!");
+        return;
+    }
+
+    const answer = quizQuestions[currentQuestion].answers[selectedAnswerIdx];
+    Object.keys(answer.traits).forEach(trait => {
+        userProfile[trait] += answer.traits[trait];
+    });
+
+    selectedAnswerIdx = -1;
+    currentQuestion++;
+
+    if (currentQuestion < quizQuestions.length) {
+        displayQuestion();
+    } else {
+        startGachaAnimation();
+    }
+}
+
+// previousQuestion - moved to top-level so UI can call it
+function previousQuestion() {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        selectedAnswerIdx = -1;
+        displayQuestion();
+    }
+}
+
+// startGachaAnimation - moved to top-level
+function startGachaAnimation() {
+    // Play gacha spin sound
+    new Audio('gacha.mp3').play();
+
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("gachaAnim").classList.remove("hidden");
+
+    // Animate gacha text
+    const gachaText = document.getElementById("gachaText");
+    const messages = [
+        "Sedang mencari karakter terbaik...",
+        "Menganalisis kepribadianmu...",
+        "Memproses data...",
+        "Hampir selesai...",
+        "Siap-siap melihat hasilnya!"
+    ];
+
+    let messageIndex = 0;
+    let textInterval = setInterval(() => {
+        gachaText.textContent = messages[messageIndex];
+        messageIndex = (messageIndex + 1) % messages.length;
+    }, 400);
+
+    setTimeout(() => {
+        clearInterval(textInterval);
+        rollCharacter(username);
+    }, 2000);
+}
+
+// rollCharacter - moved to top-level
+function rollCharacter(username) {
+    const result = document.getElementById("result");
+    const gacha = document.getElementById("gachaAnim");
+
+    let resultObj = findBestCharacter();
+    let char = resultObj.character;
+
+    document.body.style.backgroundImage = char.gender === "male" ?
+        'url("images/sunset.jpg")' :
+        char.gender === "anomali" ? 'url("images/black.jpg")' :
+        'url("images/taman_bunga.jpg")';
+
+    if (char.gender === "anomali") {
+        const anomalyAudio = new Audio("sounds/anomali.mp3");
+        anomalyAudio.addEventListener('ended', () => {
+            anomalyAudio.addEventListener('ended', () => {});
+            anomalyAudio.play();
+        });
+    } else {
+        if (char.sound) new Audio(char.sound).play();
+    }
+
+    // Play backsound for Robin
+    if (char.name === "Robin") {
+        const robinBacksound = new Audio("sounds/robin_sound.mp3");
+        robinBacksound.play();
+    }
+
+    // Play backsound for Astra Yao
+    if (char.name === "Astra Yao") {
+        const astraYaoBacksound = new Audio("sounds/astra_yao_sound.mp3");
+        astraYaoBacksound.play();
+    }
+
+    createParticles(char.gender);
+    animateParticles();
+
+    // Gimmick untuk karakter anomali
+    if (char.gender === "anomali") {
+        // Shake effect
+        document.body.classList.add("shake");
+        setTimeout(() => {
+            document.body.classList.remove("shake");
+        }, 500);
+
+        // Show error message
+        const errorMsg = document.getElementById("errorMessage");
+        errorMsg.style.display = "block";
+        setTimeout(() => {
+            errorMsg.style.display = "none";
+        }, 2000);
+    }
+
+    // Show short reveal message in gacha area before revealing full result
+    const revealMsg = (gachaMode === 'personality' && resultObj.similarity != null)
+        ? `Selamat! Kamu mirip dengan ${char.name} — ${resultObj.similarity}%!`
+        : (gachaMode === 'compatibility' && resultObj.compatibility != null)
+            ? `Selamat! Kamu cocok dengan ${char.name} — ${resultObj.compatibility}%!`
+            : `Selamat! Kamu mendapatkan ${char.name}!`;
+
+    const gachaTextEl = document.getElementById('gachaText');
+    if (gachaTextEl) {
+        gachaTextEl.textContent = revealMsg;
+        gachaTextEl.classList.add('reveal-animate');
+    }
+
+    // wait briefly so player can read the reveal message
+    setTimeout(() => {
+        if (gachaTextEl) gachaTextEl.classList.remove('reveal-animate');
+
+        // burst confetti then reveal
+        createParticles('confetti');
+        animateParticles();
+
+        gacha.classList.add("hidden");
+        result.classList.remove("hidden");
+
+        // populate result HTML after reveal
+        renderResultHTML();
+    }, 1200);
+
+    // helper to inject result markup (moved out so we can delay showing it)
+    function renderResultHTML() {
+        // Prepare percentage / message line: hide numeric percentages for random mode
+        let percentHtml = '';
+        if (gachaMode === 'personality' && resultObj.similarity !== null && resultObj.similarity !== undefined) {
+            percentHtml = `<p id="percentages" style="opacity:0;"><strong>Wow, kamu mirip dengan ${char.name} ${resultObj.similarity}%!</strong></p>`;
+        } else if (gachaMode === 'compatibility' && resultObj.compatibility !== null && resultObj.compatibility !== undefined) {
+            percentHtml = `<p id="percentages" style="opacity:0;"><strong>Wow, kamu cocok dengan ${char.name} ${resultObj.compatibility}%!</strong></p>`;
+        } else if (gachaMode === 'random') {
+            percentHtml = `<p id="percentages" style="opacity:0;"><strong>Hasil acak! Nikmati karakternya.</strong></p>`;
+        }
+
+        result.innerHTML = `
+        <h2>Hai, ${username}!</h2>
+        <div class="char-card fadeIn">
+            <div class="char-card-top">
+                <img src="${char.img}" alt="${char.name}">
+                <div class="char-info">
+                    <h1>${char.name}</h1>
+                    <p id="desc" style="opacity:0;"><strong>Deskripsi:</strong> ${char.desc}</p>
+                    <p id="traits" style="opacity:0;"><strong>Ciri-ciri:</strong> ${char.details}</p>
+                    ${percentHtml}
+                </div>
+            </div>
+            <div class="char-card-bottom">
+                <img src="${char.img}" alt="${char.name}">
+                <p id="words" style="opacity:0;" class="char-words">"${char.words}"</p>
+            </div>
+        </div>
+        <button onclick="location.reload()">Coba Lagi</button>
+    `;
+
+        const soundEffect = new Audio("sounds/pop.mp3");
+        setTimeout(() => {
+            const d = document.getElementById("desc"); if (d) { d.style.opacity = 1; }
+            soundEffect.play();
+        }, 500);
+        setTimeout(() => {
+            const t = document.getElementById("traits"); if (t) { t.style.opacity = 1; }
+            soundEffect.play();
+        }, 1000);
+        setTimeout(() => {
+            const p = document.getElementById("percentages"); if (p) { p.style.opacity = 1; soundEffect.play(); }
+        }, 1500);
+        setTimeout(() => {
+            const w = document.getElementById("words"); if (w) { w.style.opacity = 1; soundEffect.play(); }
+        }, 2000);
+    }
+
+    // Prepare percentage / message line: hide numeric percentages for random mode
+    let percentHtml = '';
+    if (gachaMode === 'personality' && resultObj.similarity !== null && resultObj.similarity !== undefined) {
+        percentHtml = `<p id="percentages" style="opacity:0;"><strong>Wow, kamu mirip dengan ${char.name} ${resultObj.similarity}%!</strong></p>`;
+    } else if (gachaMode === 'compatibility' && resultObj.compatibility !== null && resultObj.compatibility !== undefined) {
+        percentHtml = `<p id="percentages" style="opacity:0;"><strong>Wow, kamu cocok dengan ${char.name} ${resultObj.compatibility}%!</strong></p>`;
+    } else if (gachaMode === 'random') {
+        percentHtml = `<p id="percentages" style="opacity:0;"><strong>Hasil acak! Nikmati karakternya.</strong></p>`;
+    }
+
+    result.innerHTML = `
+    <h2>Hai, ${username}!</h2>
+    <div class="char-card fadeIn">
+        <div class="char-card-top">
+            <img src="${char.img}" alt="${char.name}">
+            <div class="char-info">
+                <h1>${char.name}</h1>
+                <p id="desc" style="opacity:0;"><strong>Deskripsi:</strong> ${char.desc}</p>
+                <p id="traits" style="opacity:0;"><strong>Ciri-ciri:</strong> ${char.details}</p>
+                ${percentHtml}
+            </div>
+        </div>
+        <div class="char-card-bottom">
+            <img src="${char.img}" alt="${char.name}">
+            <p id="words" style="opacity:0;" class="char-words">"${char.words}"</p>
+        </div>
+    </div>
+    <button onclick="location.reload()">Coba Lagi</button>
+`;
+
+    const soundEffect = new Audio("sounds/pop.mp3");
+    setTimeout(() => {
+        const d = document.getElementById("desc"); if (d) { d.style.opacity = 1; }
+        soundEffect.play();
+    }, 500);
+    setTimeout(() => {
+        const t = document.getElementById("traits"); if (t) { t.style.opacity = 1; }
+        soundEffect.play();
+    }, 1000);
+    setTimeout(() => {
+        const p = document.getElementById("percentages"); if (p) { p.style.opacity = 1; soundEffect.play(); }
+    }, 1500);
+    setTimeout(() => {
+        const w = document.getElementById("words"); if (w) { w.style.opacity = 1; soundEffect.play(); }
+    }, 2000);
+}
+
+// Simple particle helpers (safe no-op fallback if original implementation missing)
+function createParticles(kind) {
+    particles = [];
+    if (kind === 'confetti') {
+        const colors = ['#FF5252', '#FFCA28', '#4CAF50', '#2196F3', '#AB47BC', '#FF7043'];
+        const count = 80;
+        for (let i = 0; i < count; i++) {
+            particles.push({
+                x: canvas.width / 2 + (Math.random() - 0.5) * 120,
+                y: canvas.height / 2 + (Math.random() - 0.5) * 40,
+                vx: (Math.random() - 0.5) * 8,
+                vy: -2 - Math.random() * 6,
+                size: 6 + Math.random() * 8,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                shape: 'rect',
+                life: 120 + Math.random() * 60
+            });
+        }
+        return;
+    }
+
+    // default celebratory particles influenced by gender
+    const gender = kind || 'female';
+    const count = 40;
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 6,
+            vy: (Math.random() - 0.5) * 6,
+            size: 2 + Math.random() * 6,
+            color: gender === 'male' ? 'rgba(33,150,243,0.85)' : gender === 'anomali' ? 'rgba(0,0,0,0.9)' : 'rgba(255,105,180,0.85)',
+            shape: 'circle',
+            life: 80 + Math.random() * 60
+        });
+    }
+}
+
+function animateParticles() {
+    if (!canvas || !ctx) return;
+    let rafId = null;
+    function step() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.x += p.vx; p.y += p.vy;
+            p.vy += 0.12; // gravity
+            p.life = (p.life || 100) - 1;
+            if (p.shape === 'rect') {
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, Math.max(2, p.size), Math.max(2, p.size * 0.6));
+            } else {
+                ctx.beginPath();
+                ctx.fillStyle = p.color;
+                ctx.arc(p.x, p.y, Math.max(0.5, p.size), 0, Math.PI * 2);
+                ctx.fill();
+            }
+            // fade/cleanup
+            if (p.life <= 0 || p.y > canvas.height + 50) particles.splice(i, 1);
+        }
+        if (particles.length === 0) {
+            if (rafId) cancelAnimationFrame(rafId);
+            return;
+        }
+        rafId = requestAnimationFrame(step);
+    }
+    step();
+}
+
+// findBestCharacter - moved to top-level
+function findBestCharacter() {
+    // Check if username is mapped to a specific character
+    const lowerUsername = username.toLowerCase();
+    if (nameMapping[lowerUsername]) {
+        const mappedCharName = nameMapping[lowerUsername];
+        const mappedChar = characters.find(char => char.name === mappedCharName);
+        if (mappedChar) {
+            return { character: mappedChar, similarity: 100, compatibility: 100 };
+        }
+    }
+
+    // Build max possible user trait totals from quiz definition so we can normalize
+    const traitKeys = ['brave', 'smart', 'gentle', 'leader', 'warm', 'cautious'];
+    const maxPossible = {};
+    traitKeys.forEach(t => maxPossible[t] = 0);
+    quizQuestions.forEach(q => {
+        q.answers.forEach(a => {
+            traitKeys.forEach(t => {
+                if (a.traits && a.traits[t]) maxPossible[t] += a.traits[t];
+            });
+        });
+    });
+
+    // Helper to compute normalized user trait (0..1)
+    const userNorm = {};
+    traitKeys.forEach(t => {
+        const raw = userProfile[t] || 0;
+        const max = maxPossible[t] || 1;
+        userNorm[t] = Math.min(1, raw / max);
+    });
+
+    let bestMatch = null;
+    let bestScore = -Infinity;
+    let bestSimPerc = 0;
+    let bestCompPerc = 0;
+
+    characters.forEach(char => {
+        const traits = characterTraits[char.name] || {};
+
+        // If random mode, treat this as chance-based selection
+        if (gachaMode === 'random') {
+            // pick randomly with uniform probability
+            if (!bestMatch || Math.random() < 1 / characters.length) {
+                bestMatch = char;
+                bestSimPerc = null;
+                bestCompPerc = null;
+            }
+            return;
+        }
+
+        // similarity: average of per-trait product (userNorm * charNorm)
+        let simSum = 0;
+        let simCount = 0;
+        traitKeys.forEach(t => {
+            const charNorm = (traits[t] || 0) / 3; // char trait in 0..3
+            // only consider trait if character has non-zero or quiz allowed user to have it
+            if ((traits[t] || 0) > 0 || (maxPossible[t] || 0) > 0) {
+                simSum += (userNorm[t] || 0) * charNorm;
+                simCount++;
+            }
+        });
+        const similarityPerc = simCount ? (simSum / simCount) * 100 : 0;
+
+        // compatibility: average of complement distance: 1 - |userNorm - charNorm|
+        let compSum = 0;
+        let compCount = 0;
+        traitKeys.forEach(t => {
+            const charNorm = (traits[t] || 0) / 3;
+            if ((traits[t] || 0) > 0 || (maxPossible[t] || 0) > 0) {
+                compSum += 1 - Math.abs((userNorm[t] || 0) - charNorm);
+                compCount++;
+            }
+        });
+        const compatibilityPerc = compCount ? (compSum / compCount) * 100 : 0;
+
+        // Choose best based on selected mode
+        const score = (gachaMode === 'personality') ? similarityPerc : compatibilityPerc;
+        // add slight randomness to break ties
+        const finalScore = score + Math.random() * 3;
+        if (finalScore > bestScore) {
+            bestScore = finalScore;
+            bestMatch = char;
+            bestSimPerc = Math.round(similarityPerc);
+            bestCompPerc = Math.round(compatibilityPerc);
+        }
+    });
+
+    return {
+        character: bestMatch,
+        similarity: bestSimPerc,
+        compatibility: bestCompPerc
+    };
+}
+
+let characters = [{
         name: "Clorinde",
         gender: "female",
         img: "images/clorinde.png",
@@ -403,7 +1098,7 @@ const characterTraits = {
     "Fugue": { smart: 2, gentle: 2 }
 };
 
-nameMapping = {
+const nameMapping = {
     "rara": "Phainon",
     "kirana": "Wriothesley",
     "galang": "Hina",
@@ -549,551 +1244,11 @@ const quizQuestions = [{
     }
 ];
 
-const canvas = document.getElementById("particleCanvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-let particles = [];
-
-let userProfile = {};
-let currentQuestion = 0;
-let username = "";
-let selectedAnswerIdx = -1;
-let gachaMode = "personality"; // "personality" atau "compatibility"
-
-document.getElementById("adminBtn").addEventListener("click", openAdmin);
-
-function openBrowse() {
-    document.getElementById("home").classList.add("hidden");
-    document.getElementById("browsePanel").classList.remove("hidden");
-    displayBrowseCharacters();
-}
-
-function closeBrowse() {
-    document.getElementById("browsePanel").classList.add("hidden");
-    document.getElementById("home").classList.remove("hidden");
-}
-
-function openTutorial() {
-    document.getElementById("tutorialModal").classList.remove("hidden");
-}
-
-function closeTutorial() {
-    document.getElementById("tutorialModal").classList.add("hidden");
-}
-
-function displayBrowseCharacters() {
-    const list = document.getElementById("browseCharacterList");
-    list.innerHTML = "";
-    characters.forEach(char => {
-        const traits = characterTraits[char.name];
-        const traitText = traits ? Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${k}: ${v}`).join(", ") : "N/A";
-
-        list.innerHTML += `
-            <div class="char-item">
-                <img src="${char.img}" alt="${char.name}" class="char-thumbnail" onerror="this.style.display='none'">
-                <div class="info">
-                    <div class="name">${char.name}</div>
-                    <div class="gender">${char.gender === "male" ? "♂ Laki-laki" : char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}</div>
-                    <div class="desc">${char.desc}</div>
-                    <small style="color: #999;">${traitText}</small>
-                </div>
-                <div class="char-actions">
-                    <button class="char-item-btn" onclick="viewCharacter('${char.name}')">Lihat Detail</button>
-                </div>
-            </div>
-    `;
-    });
-}
-
-function filterCharacters() {
-    const searchTerm = document.getElementById("searchName").value.toLowerCase();
-    const genderFilter = document.getElementById("filterGender").value;
-    const traitFilter = document.getElementById("filterTrait").value;
-
-    const list = document.getElementById("browseCharacterList");
-    list.innerHTML = "";
-
-    characters.forEach(char => {
-        const matchesSearch = char.name.toLowerCase().includes(searchTerm);
-        const matchesGender = !genderFilter || char.gender === genderFilter;
-        const traits = characterTraits[char.name] || {};
-        const matchesTrait = !traitFilter || (traits[traitFilter] && traits[traitFilter] > 0);
-
-        if (matchesSearch && matchesGender && matchesTrait) {
-            const traitText = traits ? Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${k}: ${v}`).join(", ") : "N/A";
-
-            list.innerHTML += `
-                <div class="char-item">
-                    <img src="${char.img}" alt="${char.name}" class="char-thumbnail" onerror="this.style.display='none'">
-                    <div class="info">
-                        <div class="name">${char.name}</div>
-                        <div class="gender">${char.gender === "male" ? "♂ Laki-laki" : char.gender === "anomali" ? "⚠ Anomali" : "♀ Perempuan"}</div>
-                        <div class="desc">${char.desc}</div>
-                        <small style="color: #999;">${traitText}</small>
-                    </div>
-                    <div class="char-actions">
-                        <button class="char-item-btn" onclick="viewCharacter('${char.name}')">Lihat Detail</button>
-                    </div>
-                </div>
-        `;
-        }
-    });
-}
-
-function viewCharacter(name) {
-    const char = characters.find(c => c.name === name);
-    if (!char) return;
-
-    const traits = characterTraits[name];
-    const traitText = traits ? Object.entries(traits).filter(([k, v]) => v > 0).map(([k, v]) => `${k}: ${v}`).join(", ") : "N/A";
-
-    document.getElementById("result").innerHTML = `
-        <h2>Detail Karakter</h2>
-        <div class="char-card fadeIn">
-            <div class="char-card-top">
-                <img src="${char.img}" alt="${char.name}">
-                <div class="char-info">
-                    <h1>${char.name}</h1>
-                    <p><strong>Gender:</strong> ${char.gender === "male" ? "Laki-laki" : char.gender === "anomali" ? "Anomali" : "Perempuan"}</p>
-                    <p><strong>Ciri-ciri:</strong> ${char.desc}</p>
-                    <p><strong>Deskripsi:</strong> ${char.details}</p>
-                    <p><strong>Trait:</strong> ${traitText}</p>
-                </div>
-            </div>
-            <div class="char-card-bottom">
-                <img src="${char.img}" alt="${char.name}">
-                <p class="char-words">"${char.words}"</p>
-            </div>
-        </div>
-        <button onclick="closeCharacterView()">← Kembali ke Jelajah</button>
-    `;
-
-    document.getElementById("browsePanel").classList.add("hidden");
-    document.getElementById("result").classList.remove("hidden");
-}
-
-function closeCharacterView() {
-    document.getElementById("result").classList.add("hidden");
-    document.getElementById("browsePanel").classList.remove("hidden");
-}
-
-// Load karakter dari localStorage saat halaman muat
-window.addEventListener("load", () => {
-    loadCharactersFromStorage();
-    loadNameMappingsFromStorage();
-});
-
-function startRandomGacha() {
-    username = document.getElementById("username").value;
-    if (!username) {
-        alert("Isi nama dulu ya!");
-        return;
-    }
-
-    // Set random mode
-    gachaMode = "random";
-    document.getElementById("home").classList.add("hidden");
-    startGachaAnimation();
-}
-
-function startQuiz(mode) {
-    username = document.getElementById("username").value;
-    if (!username) {
-        alert("Isi nama dulu ya!");
-        return;
-    }
-
-    gachaMode = mode;
-    document.getElementById("home").classList.add("hidden");
-    document.getElementById("quiz").classList.remove("hidden");
-    currentQuestion = 0;
-    userProfile = { brave: 0, smart: 0, gentle: 0, leader: 0, warm: 0, cautious: 0 };
-    selectedAnswerIdx = -1;
-
-    displayQuestion();
-}
-
-function displayQuestion() {
-    const quizContent = document.getElementById("quizContent");
-    const q = quizQuestions[currentQuestion];
-    const modeTitle = gachaMode === "personality" ? "🔍 Kamu Mirip Siapa?" : "💕 Pasangan Mu?";
-
-    let html = `
-        <div class="quiz-mode-title">${modeTitle}</div>
-        <div class="quiz-progress">Pertanyaan ${currentQuestion + 1} dari ${quizQuestions.length}</div>
-        <div class="quiz-question">
-            <h3>${q.question}</h3>
-            <div class="quiz-options">
-    `;
-
-    q.answers.forEach((answer, idx) => {
-        html += `<div class="quiz-option" onclick="selectAnswer(${idx})">${answer.text}</div>`;
-    });
-
-    html += `
-            </div>
-        </div>
-        <div class="quiz-button-group">
-            <button onclick="previousQuestion()" ${currentQuestion === 0 ? 'disabled' : ''}>← Sebelumnya</button>
-            <button onclick="nextQuestion()" id="nextBtn">Selanjutnya →</button>
-        </div>
-    `;
-
-    quizContent.innerHTML = html;
-}
-
-function selectAnswer(idx) {
-    selectedAnswerIdx = idx;
-    document.querySelectorAll(".quiz-option").forEach((el, i) => {
-        el.classList.toggle("selected", i === idx);
-    });
-}
-
-function nextQuestion() {
-    if (selectedAnswerIdx === -1) {
-        alert("Pilih jawaban dulu!");
-        return;
-    }
-
-    const answer = quizQuestions[currentQuestion].answers[selectedAnswerIdx];
-    Object.keys(answer.traits).forEach(trait => {
-        userProfile[trait] += answer.traits[trait];
-    });
-
-    selectedAnswerIdx = -1;
-    currentQuestion++;
-
-    if (currentQuestion < quizQuestions.length) {
-        displayQuestion();
-    } else {
-        startGachaAnimation();
-    }
-
-    function previousQuestion() {
-        if (currentQuestion > 0) {
-            currentQuestion--;
-            selectedAnswerIdx = -1;
-            displayQuestion();
-        }
-    }
-
-    function startGachaAnimation() {
-        // Play gacha spin sound
-        new Audio('gacha.mp3').play();
-
-        document.getElementById("quiz").classList.add("hidden");
-        document.getElementById("gachaAnim").classList.remove("hidden");
-
-        // Animate gacha text
-        const gachaText = document.getElementById("gachaText");
-        const messages = [
-            "Sedang mencari karakter terbaik...",
-            "Menganalisis kepribadianmu...",
-            "Memproses data...",
-            "Hampir selesai...",
-            "Siap-siap melihat hasilnya!"
-        ];
-
-        let messageIndex = 0;
-        let textInterval = setInterval(() => {
-            gachaText.textContent = messages[messageIndex];
-            messageIndex = (messageIndex + 1) % messages.length;
-        }, 400);
-
-        setTimeout(() => {
-            clearInterval(textInterval);
-            rollCharacter(username);
-        }, 2000);
-    }
-
-    function rollCharacter(username) {
-        const result = document.getElementById("result");
-        const gacha = document.getElementById("gachaAnim");
-
-        let resultObj = findBestCharacter();
-        let char = resultObj.character;
-
-        document.body.style.backgroundImage = char.gender === "male" ?
-            'url("images/sunset.jpg")' :
-            char.gender === "anomali" ? 'url("images/black.jpg")' :
-            'url("images/taman_bunga.jpg")';
-
-        if (char.gender === "anomali") {
-            const anomalyAudio = new Audio("sounds/anomali.mp3");
-            anomalyAudio.addEventListener('ended', () => {
-                anomalyAudio.addEventListener('ended', () => {});
-                anomalyAudio.play();
-            });
-        } else {
-            new Audio(char.sound).play();
-        }
-
-        // Play backsound for Robin
-        if (char.name === "Robin") {
-            const robinBacksound = new Audio("sounds/robin_sound.mp3");
-            robinBacksound.play();
-        }
-
-        // Play backsound for Astra Yao
-        if (char.name === "Astra Yao") {
-            const astraYaoBacksound = new Audio("sounds/astra_yao_sound.mp3");
-            astraYaoBacksound.play();
-        }
-
-
-        createParticles(char.gender);
-        animateParticles();
-
-        // Gimmick untuk karakter anomali
-        if (char.gender === "anomali") {
-            // Shake effect
-            document.body.classList.add("shake");
-            setTimeout(() => {
-                document.body.classList.remove("shake");
-            }, 500);
-
-            // Show error message
-            const errorMsg = document.getElementById("errorMessage");
-            errorMsg.style.display = "block";
-            setTimeout(() => {
-                errorMsg.style.display = "none";
-            }, 2000);
-        }
-
-        gacha.classList.add("hidden");
-        result.classList.remove("hidden");
-
-        result.innerHTML = `
-        <h2>Hai, ${username}!</h2>
-        <div class="char-card fadeIn">
-            <div class="char-card-top">
-                <img src="${char.img}" alt="${char.name}">
-                <div class="char-info">
-                    <h1>${char.name}</h1>
-                    <p id="desc" style="opacity:0;"><strong>Deskripsi:</strong> ${char.desc}</p>
-                    <p id="traits" style="opacity:0;"><strong>Ciri-ciri:</strong> ${char.details}</p>
-                    <p id="percentages" style="opacity:0;"><strong>${gachaMode === "personality" ? `Wow, kamu mirip dengan ${char.name} ${resultObj.similarity}%!` : `Wow, kamu cocok dengan ${char.name} ${resultObj.compatibility}%!`}</strong></p>
-                </div>
-            </div>
-            <div class="char-card-bottom">
-                <img src="${char.img}" alt="${char.name}">
-                <p id="words" style="opacity:0;" class="char-words">"${char.words}"</p>
-            </div>
-        </div>
-        <button onclick="location.reload()">Coba Lagi</button>
-    `;
-
-        const soundEffect = new Audio("sounds/pop.mp3");
-        setTimeout(() => {
-            document.getElementById("desc").style.opacity = 1;
-            soundEffect.play();
-        }, 500);
-        setTimeout(() => {
-            document.getElementById("traits").style.opacity = 1;
-            soundEffect.play();
-        }, 1000);
-        setTimeout(() => {
-            document.getElementById("percentages").style.opacity = 1;
-            soundEffect.play();
-        }, 1500);
-        setTimeout(() => {
-            document.getElementById("words").style.opacity = 1;
-            soundEffect.play();
-        }, 2000);
-    }
-
-    function findBestCharacter() {
-        // Check if username is mapped to a specific character
-        const lowerUsername = username.toLowerCase();
-        if (nameMapping[lowerUsername]) {
-            const mappedCharName = nameMapping[lowerUsername];
-            const mappedChar = characters.find(char => char.name === mappedCharName);
-            if (mappedChar) {
-                return { character: mappedChar, similarity: 100, compatibility: 100 };
-            }
-        }
-
-        let bestMatch = characters[0];
-        let bestSimilarityScore = -Infinity;
-        let bestCompatibilityScore = -Infinity;
-        let bestSimilarityPerc = 0;
-        let bestCompatibilityPerc = 0;
-
-        characters.forEach(char => {
-            const traits = characterTraits[char.name] || {};
-
-            // Calculate similarity score (personality match)
-            let similarityScore = 0;
-            Object.keys(traits).forEach(trait => {
-                similarityScore += traits[trait] * (userProfile[trait] || 0);
-            });
-            const similarityPerc = (similarityScore / 540) * 100; // Max score 540
-
-            // Calculate compatibility score (complementary traits)
-            let compatibilityScore = 0;
-            Object.keys(traits).forEach(trait => {
-                const charTrait = traits[trait] || 0;
-                const scaledUserTrait = (userProfile[trait] || 0) / 10; // Scale to 0-3 range
-                const difference = Math.abs(charTrait - scaledUserTrait);
-                if (difference >= 1) {
-                    compatibilityScore += (3 - difference) * 2;
-                } else if (difference === 0) {
-                    compatibilityScore += 1;
-                }
-            });
-            const compatibilityPerc = (compatibilityScore / 24) * 100; // Max score 24
-
-            // Add randomness
-            similarityScore += Math.random() * 5;
-            compatibilityScore += Math.random() * 5;
-
-            // Determine best match based on mode
-            if (gachaMode === "personality") {
-                if (similarityScore > bestSimilarityScore) {
-                    bestSimilarityScore = similarityScore;
-                    bestMatch = char;
-                    bestSimilarityPerc = similarityPerc;
-                    bestCompatibilityPerc = compatibilityPerc;
-                }
-            } else if (gachaMode === "compatibility") {
-                if (compatibilityScore > bestCompatibilityScore) {
-                    bestCompatibilityScore = compatibilityScore;
-                    bestMatch = char;
-                    bestSimilarityPerc = similarityPerc;
-                    bestCompatibilityPerc = compatibilityPerc;
-                }
-            }
-        });
-
-        return {
-            character: bestMatch,
-            similarity: Math.round(bestSimilarityPerc),
-            compatibility: Math.round(bestCompatibilityPerc)
-        };
-    }
-}
-
-function createParticles(gender) {
-    particles = [];
-    for (let i = 0; i < 50; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 5 + 2,
-            speedY: Math.random() * 1 + 0.5,
-            type: gender === "male" ? "cloud" : gender === "anomali" ? "star" : "flower"
-        });
-    }
-}
-
-function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-        ctx.fillStyle = p.type === "cloud" ? "rgba(255,255,255,0.5)" :
-            p.type === "star" ? "rgba(255,255,255,0.7)" :
-            "rgba(255,182,193,0.7)";
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-        p.y -= p.speedY;
-        if (p.y + p.size < 0) p.y = canvas.height + p.size;
-    });
-    requestAnimationFrame(animateParticles);
-}
-
-function loadNameMappingsFromStorage() {
-    const stored = localStorage.getItem("nameMappings");
-    if (stored) {
-        const customMappings = JSON.parse(stored);
-        Object.assign(nameMapping, customMappings);
-    }
-}
-
-function populateCharacterSelect() {
-    const select = document.getElementById("mapCharacter");
-    select.innerHTML = '<option value="">Pilih Karakter</option>';
-    characters.forEach(char => {
-        select.innerHTML += `<option value="${char.name}">${char.name}</option>`;
-    });
-}
-
-function addNameMapping() {
-    const name = document.getElementById("mapName").value.trim().toLowerCase();
-    const character = document.getElementById("mapCharacter").value;
-
-    if (!name || !character) {
-        alert("Isi nama dan karakter ya!");
-        return;
-    }
-
-    nameMapping[name] = character;
-
-    // Simpan ke localStorage
-    let stored = localStorage.getItem("nameMappings");
-    const customMappings = stored ? JSON.parse(stored) : {};
-    customMappings[name] = character;
-    localStorage.setItem("nameMappings", JSON.stringify(customMappings));
-
-    alert(`Mapping ${name} -> ${character} berhasil ditambahkan!`);
-    document.getElementById("mapName").value = "";
-    document.getElementById("mapCharacter").value = "";
-    refreshNameMappingList();
-}
-
-function deleteNameMapping(name) {
-    if (!confirm(`Hapus mapping untuk ${name}?`)) return;
-
-    delete nameMapping[name];
-
-    // Update localStorage
-    let stored = localStorage.getItem("nameMappings");
-    const customMappings = stored ? JSON.parse(stored) : {};
-    delete customMappings[name];
-    localStorage.setItem("nameMappings", JSON.stringify(customMappings));
-
-    refreshNameMappingList();
-}
-
-function refreshNameMappingList() {
-    const list = document.getElementById("nameMappingList");
-    list.innerHTML = "";
-
-    Object.entries(nameMapping).forEach(([name, charName]) => {
-        list.innerHTML += `
-            <div class="mapping-item">
-                <div class="info">
-                    <div class="name">${name}</div>
-                    <div class="character">→ ${charName}</div>
-                </div>
-                <div class="mapping-actions">
-                    <button class="mapping-item-btn" onclick="deleteNameMapping('${name}')">Hapus</button>
-                </div>
-            </div>
-    `;
-    });
-}
-
-// ===== FUNGSI ADMIN PANEL =====
-function loadCharactersFromStorage() {
-    const stored = localStorage.getItem("customCharacters");
-    const storedTraits = localStorage.getItem("customTraits");
-    const customTraits = storedTraits ? JSON.parse(storedTraits) : {};
-
-    if (stored) {
-        const customChars = JSON.parse(stored);
-        customChars.forEach(char => {
-            characters.push(char);
-            if (customTraits[char.name]) {
-                characterTraits[char.name] = customTraits[char.name];
-            }
-        });
-    }
-}
-
 function openAdmin() {
     document.getElementById("home").classList.add("hidden");
     document.getElementById("adminPanel").classList.remove("hidden");
+    // ensure admin UI is initialized and populated
+    switchAdminTab('characters');
     refreshCharacterList();
     populateCharacterSelect();
     refreshNameMappingList();
@@ -1299,3 +1454,213 @@ window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 });
+
+// --- Persistence & Admin helpers ---
+function loadCharactersFromStorage() {
+    try {
+        const stored = localStorage.getItem('customCharacters');
+        if (stored) {
+            const customChars = JSON.parse(stored);
+            // merge without duplicating names
+            customChars.forEach(c => {
+                if (!characters.some(ch => ch.name === c.name)) characters.push(c);
+            });
+        }
+
+        const storedTraits = localStorage.getItem('customTraits');
+        if (storedTraits) {
+            const customTraits = JSON.parse(storedTraits);
+            Object.assign(characterTraits, customTraits);
+        }
+    } catch (e) {
+        console.error('Gagal memuat karakter dari storage', e);
+    }
+}
+
+function loadNameMappingsFromStorage() {
+    try {
+        const stored = localStorage.getItem('nameMapping');
+        if (stored) {
+            const mappings = JSON.parse(stored);
+            Object.assign(nameMapping, mappings);
+        }
+    } catch (e) {
+        console.error('Gagal memuat mapping nama', e);
+    }
+}
+
+function switchAdminTab(tab) {
+    document.querySelectorAll('#adminPanel .nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('nav' + (tab === 'characters' ? 'Characters' : tab.charAt(0).toUpperCase() + tab.slice(1))).classList.add('active');
+
+    const form = document.getElementById('adminForm');
+    const list = document.getElementById('adminList');
+    form.innerHTML = '';
+    list.innerHTML = '';
+
+    if (tab === 'characters') {
+        // build add/edit form
+        form.innerHTML = `
+            <h3>Tambah / Edit Karakter</h3>
+            <div class="form-section-inner">
+                <input id="charName" placeholder="Nama karakter">
+                <select id="charGender">
+                    <option value="">Pilih gender</option>
+                    <option value="male">Laki-laki</option>
+                    <option value="female">Perempuan</option>
+                    <option value="anomali">Anomali</option>
+                </select>
+                <input id="charImg" placeholder="images/nama.png">
+                <input id="charSound" placeholder="sounds/nama.mp3">
+                <input id="charDesc" placeholder="Deskripsi singkat">
+                <textarea id="charDetails" placeholder="Detail panjang"></textarea>
+                <input id="charWords" placeholder="Kata-kata khas">
+                <div class="traits-form">
+                    <label>Brave <input id="traitBrave" type="number" min="0" max="3" value="0"></label>
+                    <label>Smart <input id="traitSmart" type="number" min="0" max="3" value="0"></label>
+                    <label>Gentle <input id="traitGentle" type="number" min="0" max="3" value="0"></label>
+                    <label>Leader <input id="traitLeader" type="number" min="0" max="3" value="0"></label>
+                    <label>Warm <input id="traitWarm" type="number" min="0" max="3" value="0"></label>
+                    <label>Cautious <input id="traitCautious" type="number" min="0" max="3" value="0"></label>
+                </div>
+                <div>
+                    <button id="addCharBtn" onclick="addCharacter()">Tambah Karakter</button>
+                    <button onclick="resetForm()">Reset</button>
+                </div>
+            </div>
+        `;
+
+        // render list using existing helper
+        list.innerHTML = '<h3>Daftar Karakter</h3><div id="characterList"></div>';
+        refreshCharacterList();
+    } else if (tab === 'mappings') {
+        form.innerHTML = `
+            <h3>Mapping Nama ke Karakter</h3>
+            <input id="mapName" placeholder="Nama user (kecilkan otomatis)">
+            <select id="mapCharacter"></select>
+            <div><button onclick="addNameMapping()">Simpan Mapping</button></div>
+        `;
+
+        list.innerHTML = '<h3>Daftar Mapping</h3><div id="mappingList"></div>';
+        populateCharacterSelect();
+        refreshNameMappingList();
+    } else if (tab === 'stats') {
+        list.innerHTML = '<h3>Statistik Singkat</h3><div id="statsContent"></div>';
+        renderStats();
+    } else if (tab === 'import') {
+        form.innerHTML = `
+            <h3>Import / Export JSON</h3>
+            <div class="import-section">
+                <h4>Export</h4>
+                <button onclick="exportJSON()">Download JSON</button>
+            </div>
+            <div class="import-section">
+                <h4>Import (paste JSON di bawah)</h4>
+                <textarea id="importJson" style="width:100%;height:160px"></textarea>
+                <div><button onclick="importJSON()">Import</button></div>
+            </div>
+        `;
+    }
+}
+
+function populateCharacterSelect() {
+    const sel = document.getElementById('mapCharacter');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">Pilih karakter</option>';
+    characters.forEach(ch => {
+        const opt = document.createElement('option');
+        opt.value = ch.name;
+        opt.textContent = ch.name;
+        sel.appendChild(opt);
+    });
+}
+
+function refreshNameMappingList() {
+    const container = document.getElementById('mappingList') || document.getElementById('adminList');
+    if (!container) return;
+    const listEl = document.getElementById('mappingList') || container;
+    listEl.innerHTML = '';
+    const keys = Object.keys(nameMapping).sort();
+    if (keys.length === 0) {
+        listEl.innerHTML = '<p>Tidak ada mapping tersimpan.</p>';
+        return;
+    }
+    keys.forEach(k => {
+        const div = document.createElement('div');
+        div.className = 'mapping-item';
+        div.innerHTML = `<div class="info"><div class="name">${k}</div><div class="character">${nameMapping[k]}</div></div><div class="mapping-actions"><button onclick="deleteNameMapping('${k}')">Hapus</button></div>`;
+        listEl.appendChild(div);
+    });
+}
+
+function addNameMapping() {
+    const name = (document.getElementById('mapName')?.value || '').trim().toLowerCase();
+    const character = document.getElementById('mapCharacter')?.value || '';
+    if (!name || !character) { alert('Isi nama dan pilih karakter.'); return; }
+    nameMapping[name] = character;
+    localStorage.setItem('nameMapping', JSON.stringify(nameMapping));
+    refreshNameMappingList();
+    alert('Mapping tersimpan.');
+}
+
+function deleteNameMapping(name) {
+    if (!confirm(`Hapus mapping untuk ${name}?`)) return;
+    delete nameMapping[name];
+    localStorage.setItem('nameMapping', JSON.stringify(nameMapping));
+    refreshNameMappingList();
+}
+
+function exportJSON() {
+    const payload = {
+        characters: characters,
+        characterTraits: characterTraits,
+        nameMapping: nameMapping
+    };
+    const dataStr = JSON.stringify(payload, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'gamegacha_export.json';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function importJSON() {
+    const txt = document.getElementById('importJson')?.value;
+    if (!txt) { alert('Paste JSON dulu.'); return; }
+    try {
+        const obj = JSON.parse(txt);
+        if (Array.isArray(obj.characters)) {
+            // overwrite custom characters
+            localStorage.setItem('customCharacters', JSON.stringify(obj.characters));
+            // merge into runtime
+            loadCharactersFromStorage();
+        }
+        if (obj.characterTraits) {
+            localStorage.setItem('customTraits', JSON.stringify(obj.characterTraits));
+            Object.assign(characterTraits, obj.characterTraits);
+        }
+        if (obj.nameMapping) {
+            localStorage.setItem('nameMapping', JSON.stringify(obj.nameMapping));
+            Object.assign(nameMapping, obj.nameMapping);
+        }
+        alert('Import berhasil. Muat ulang halaman jika diperlukan.');
+        refreshCharacterList();
+        populateCharacterSelect();
+        refreshNameMappingList();
+    } catch (e) {
+        alert('JSON invalid: ' + e.message);
+    }
+}
+
+function renderStats() {
+    const el = document.getElementById('statsContent');
+    if (!el) return;
+    const total = characters.length;
+    const byGender = characters.reduce((acc, c) => { acc[c.gender] = (acc[c.gender] || 0) + 1; return acc; }, {});
+    el.innerHTML = `<p>Total karakter: ${total}</p><p>By gender: ${JSON.stringify(byGender)}</p>`;
+}
+
+// initialize default admin tab
+if (document.getElementById('adminPanel')) switchAdminTab('characters');
